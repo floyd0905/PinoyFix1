@@ -124,6 +124,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\RegistrationModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -193,7 +194,24 @@
     <Content Include="Scripts\angular-cookies.min.js.map" />
     <Content Include="Scripts\angular-aria.min.js.map" />
     <Content Include="Scripts\angular-animate.min.js.map" />
+    <Content Include="wwwroot\assets\audio\GIVEON - GARDEN KISSES %28INTRO LOOP%29.mp3" />
+    <Content Include="wwwroot\assets\images\bg.jpg" />
+    <Content Include="wwwroot\assets\images\bg.png" />
+    <Content Include="wwwroot\assets\images\bg2.png" />
+    <Content Include="wwwroot\assets\images\bg3.png" />
+    <Content Include="wwwroot\assets\images\dunes.jpg" />
+    <Content Include="wwwroot\assets\images\favicon cam1.png" />
+    <Content Include="wwwroot\assets\images\favicon cam2.png" />
+    <Content Include="wwwroot\assets\images\favicon dice.png" />
+    <Content Include="wwwroot\assets\images\favicon eye.png" />
+    <Content Include="wwwroot\assets\images\favicon lucky cat head.png" />
+    <Content Include="wwwroot\assets\images\favicon lucky cat.png" />
+    <Content Include="wwwroot\assets\images\favicon mirrorball.png" />
+    <Content Include="wwwroot\assets\images\favicon purple flame.png" />
+    <Content Include="wwwroot\assets\images\lantern.jpg" />
     <Content Include="wwwroot\assets\images\mojave.jpg" />
+    <Content Include="wwwroot\assets\images\mount fuji edited.png" />
+    <Content Include="wwwroot\assets\images\mount fuji.png" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\Holy-Scripts\Controller.js" />
     <Content Include="Scripts\Holy-Scripts\Module.js" />
@@ -979,7 +997,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

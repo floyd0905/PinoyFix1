@@ -2,4 +2,207 @@
     Layout = "~/Views/Shared/_RegistrationApplicationLayout.cshtml";
 }
 
+<audio id="background-music" autoplay loop>
+    <source src="~/wwwroot/assets/audio/GIVEON - GARDEN KISSES (INTRO LOOP).mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+<!-- section 1 -->
+<section class="sec-01" ng-controller="DashboardController">
+    <div class="container">
+        <h2 class="main-title" style="margin-bottom:0px">{{mainTitle}}</h2>
+        <div class="content" style="height:600px">
+            <div class="image" style="height:430px;">
+                <img style="height: 196%;" src="~/wwwroot/assets/images/dunes.jpg" alt="dunes" />
+            </div>
+            <div class="text-box" style="height:380px">
+                <h3>Explore Dark Film Photography</h3>
+                <p>
+                    Step into the shadows and uncover the beauty of contrast, where light and darkness tell untold stories. Dark film photography immerses you in a world where details emerge from the depth of shadows. Explore the artistry behind capturing moments that are as mysterious as they are unforgettable.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
 
+<!-- section 2 -->
+<section class="sec-02" >
+    <div class="container">
+        <h3 class="section-title">Setting the Mood</h3>
+        <div class="content">
+            <div class="image" style="height:600px;">
+                <img src="~/wwwroot/assets/images/lantern.jpg" alt="lantern">
+            </div>
+            <div class="info">
+                <h4 class="info-title">Dark Film and Ambience</h4>
+                <p>
+                    Ambience is key in dark film photography, where each shadow and subtle glow creates an atmosphere that draws viewers in. It’s not just about capturing an image, but about invoking a mood—whether it’s enigmatic, dramatic, or mysterious. By mastering the balance of light and darkness, this style reveals emotions hidden beneath the surface, transforming ordinary scenes into immersive experiences.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const audio = document.getElementById('background-music');
+
+
+        audio.volume = 0;
+
+
+        audio.play().then(function () {
+
+            let volume = 0;
+            const targetVolume = 0.03;
+            const fadeDuration = 4000;
+            const fadeInterval = 100;
+            const fadeStep = targetVolume / (fadeDuration / fadeInterval);
+
+            const fadeIn = setInterval(function () {
+                if (volume < targetVolume) {
+                    volume = Math.min(volume + fadeStep, targetVolume);
+                    audio.volume = volume;
+                } else {
+                    clearInterval(fadeIn);
+                }
+            }, fadeInterval);
+        }).catch(function (error) {
+            console.log("Autoplay was prevented: ", error);
+
+        });
+    });
+
+
+    ScrollReveal({
+        reset: true,
+        distance: '60px',
+        duration: 2500,
+        delay: 400,
+    });
+
+    ScrollReveal().reveal('.main-title', { delay: 400, origin: 'left' });
+    ScrollReveal().reveal('.image', { delay: 500 });
+    ScrollReveal().reveal('.section-title', { delay: 400 });
+    ScrollReveal().reveal('.info', { delay: 600, origin: 'right' });
+    ScrollReveal().reveal('.text-box', {
+        delay: 100,
+        beforeReveal: function (el) {
+            el.style.transform = 'translate(-80px, 50px)';
+        }
+    });
+
+
+</script>
+
+<style>
+    /* -- GLOBAL STYLES -- */
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* -- SECTION 1 -- */
+
+    section {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 80px 100px;
+        color: floralwhite;
+    }
+
+    .container {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .main-title {
+        font-weight: 800;
+        font-size: 4em;
+        margin-bottom: 50px;
+    }
+
+    .content {
+        position: relative;
+        width: 100%;
+        max-width: 1150px; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+        .content .image {
+            position: relative;
+            width: 800px;
+            height: 400px;
+            overflow: hidden;
+        }
+
+            .content .image img {
+                z-index: 111;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 10px;
+                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px; 
+            }
+
+        .content .text-box {
+            font-weight: 300;
+            z-index: 222;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            transform: translate(-80px, 50px);
+        }
+
+            .content .text-box h3 {
+                font-weight: 600;
+                font-size: 2em;
+                margin-bottom: 10px;
+            }
+
+    /* -- SECTION 2 -- */
+    .section-title {
+        font-weight: 800;
+        font-size: 3em;
+        margin-bottom: 80px;
+    }
+
+    .info-title {
+        font-weight: 600;
+        font-size: 1.8em;
+        margin-bottom: 10px;
+    }
+
+    .info {
+        font-weight: 300;
+        width: 700px;
+        margin-left: 50px;
+    }
+
+    /* -- BODY STYLES -- */
+    body {
+        overflow-x: hidden;
+    }
+</style>

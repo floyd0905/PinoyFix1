@@ -3,13 +3,37 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
-    <link rel="stylesheet" type="text/css"href="~/Content/materialize.min.css" />
+    <title>Registration Application</title>
+    <link rel="icon" type="image/x-icon" href="~/wwwroot/assets/images/favicon cam2.png">
+    <link rel="stylesheet" type="text/css" href="~/Content/materialize.min.css" />
     <script src="~/Scripts/materialize.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <style>
+        body {
+            background-image: url('/wwwroot/assets/images/bg3.png');
+            background-position: center;
+            background-attachment: fixed;
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+
+
 
 </head>
 
-<body ng-app="RegistrationApplication" ng-controller="RegistrationApplicationController" >
+<body ng-app="RegistrationApplication" ng-controller="RegistrationApplicationController">
+
     <div>
         @RenderBody()
     </div>
@@ -21,6 +45,9 @@
     <script src="/Scripts/Holy-Scripts/Service.js"></script>
     <script src="/Scripts/Holy-Scripts/Controller.js"></script>
 
+
 </body>
 
 </html>
+
+
