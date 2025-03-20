@@ -1,0 +1,1546 @@
+﻿@{
+    Layout = "~/Views/Shared/_HomePageLayout.cshtml";
+}
+<style>
+    .gallery-container {
+        width: 100%;
+        height: calc(100vh - 80px);
+        overflow-y: auto;
+        padding: 20px;
+        margin-top: 0;
+    }
+
+    .gallery {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .gallery-column {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        min-width: 400px;
+    }
+
+    .gallery-item {
+        width: 400px;
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+            .gallery-item img:hover {
+                transform: scale(1.06);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            }
+
+    .footer {
+        opacity: 0;
+        visibility: hidden;
+        background-color: rgba(51, 51, 51, 0.7);
+        color: white;
+        text-align: center;
+        width: 100%;
+        padding: 35px 20px;
+        font-size: 12px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        z-index: 1000;
+    }
+
+        .footer img {
+            width: 80px;
+            height: auto;
+            margin-top: 15px;
+            position: absolute;
+            bottom: 1px;
+            left: 40px;
+        }
+
+    .footer-text {
+        margin-bottom: 10px;
+        font-size: 12px;
+    }
+
+    .gallery-container::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    .gallery-container::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 10px;
+    }
+
+    .gallery-container::-webkit-scrollbar-track {
+        background-color: #f1f1f1;
+    }
+
+    .heart-icon {
+        position: absolute;
+        bottom: 15px;
+        left: 15px;
+        font-size: 30px;
+        color: transparent;
+        background: transparent;
+        padding: 8px;
+        cursor: pointer;
+        transition: transform 0.3s ease, color 0.3s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+    }
+
+        .heart-icon::before {
+            content: '\2764';
+            font-size: 30px;
+            color: white;
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .heart-icon.liked::before {
+            color: #ff5555;
+        }
+
+    .gallery-item:hover .heart-icon {
+        opacity: 1;
+    }
+
+    .heart-icon:hover {
+        transform: scale(1.3);
+    }
+
+    .gallery-item {
+        width: 400px;
+        break-inside: avoid;
+        margin-bottom: 20px;
+        position: relative;
+        opacity: 1;
+        visibility: visible;
+    }
+
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 1;
+            visibility: visible;
+        }
+
+            .gallery-item img:hover {
+                transform: scale(1.06);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+                cursor: pointer;
+            }
+
+    #commentsList {
+        max-height: 400px;
+        overflow-y: auto;
+        margin-top: 20px;
+        padding: 10px;
+    }
+
+    .comment {
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        padding: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        width: 530px;
+    }
+
+    .comment-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 5px;
+        position: relative;
+    }
+
+    .comment-content {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        flex: 1;
+    }
+
+    .comment-user-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .comment-username {
+        font-weight: bold;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .comment-date {
+        font-size: 12px;
+        color: #666;
+    }
+
+    .comment-user-img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .comment-body {
+        font-size: 14px;
+        color: #333;
+        padding: 5px 0;
+        width: fit-content;
+        max-width: 90%;
+        word-wrap: break-word;
+        margin-top: 5px;
+    }
+
+    .comment-action.delete {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #dc3545;
+        font-size: 12px;
+        padding: 5px;
+        margin-left: auto;
+        opacity: 0.7;
+        transition: opacity 0.2s ease;
+    }
+
+        .comment-action.delete:hover {
+            opacity: 1;
+            background: none;
+        }
+
+    /* Modal scrolling styles */
+    #imageDetailsModal .modal-content {
+        max-height: 90vh;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #commentsList {
+        max-height: 300px;
+        overflow-y: auto;
+        padding-right: 10px;
+        margin-top: 10px;
+    }
+
+        /* Scrollbar styling */
+        #commentsList::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #commentsList::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        #commentsList::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+            #commentsList::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+
+    .comment-header .username {
+        display: none;
+    }
+</style>
+<!-- Header Section -->
+<div class="header-container" style="position: relative; width: 100%; height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px;">
+    <!-- Left Section: Logo and Submit an Image -->
+    <div style="display: flex; align-items: center; gap: 20px;">
+        <img src="~/wwwroot/assets/images/orca.png" alt="Logo" width="115" height="60" />
+        <a href="javascript:void(0)" onclick="openModal()" style="text-decoration: none; color: white; padding: 4px 15px; border-radius: 50px; background-color: transparent; border: 2px solid white; height: 35px;">
+            Submit an Image
+        </a>
+    </div>
+
+
+    <!-- Center Section: Search Bar -->
+    <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center;">
+        <input type="text" id="searchBar" class="search-bar" placeholder="Search..."
+               style="width: 540px; height: 35px; border-radius: 50px; padding: 0 15px; background-color: #f2efef; font-size: 16px; outline: none; color: black !important;">
+    </div>
+
+
+
+    <!-- Right Section: Profile and Logout -->
+    <script>
+        async function fetchProfilePicture(imgElement) {
+            const userId = sessionStorage.getItem('userId');
+            if (!userId) {
+                console.error('User ID is not available. Please log in.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/user/profile/${userId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    console.error('Failed to fetch profile picture:', response.statusText);
+                    return;
+                }
+
+                const data = await response.json();
+                console.log('Response data:', data);
+
+                if (data && data.profile_image) {
+                    const profileImageUrl = new URL(data.profile_image, 'http://localhost:3000').toString();
+                    imgElement.src = `${profileImageUrl}?timestamp=${Date.now()}`; // Cache-busting
+                    console.log('Profile image loaded:', imgElement.src);
+                } else {
+                    console.warn('No profile image found. Using default.');
+                }
+            } catch (error) {
+                console.error('Error fetching profile picture:', error.message);
+            }
+        }
+
+        // Fetch profile picture for the profile page header when the window loads
+        window.onload = function () {
+            const profilePic = document.getElementById("profilePic");
+            if (profilePic) fetchProfilePicture(profilePic);
+        };
+    </script>
+
+    <!-- HTML for the profile image in the header -->
+    <div style="display: flex; align-items: center; margin-right: 50px;">
+        <!-- Profile Button (Image) -->
+        <button onclick="redirectToProfile()" style="background-color: transparent; border: none; cursor: pointer;">
+            <img id="profilePic" src="~/wwwroot/assets/images/user-avatar.png" alt="Profile" style="border-radius: 50%; margin-right: 15px; margin-top: 10px; width: 50px; height: 50px;" />
+        </button>
+
+        <!-- Logout Button -->
+        <a href="/Home/LoginPage" style="text-decoration: none; color: white; padding: 4px 15px; border-radius: 50px; background-color: black; border: 2px solid black; height: 37px; padding-right: 25px; padding-left: 25px;">
+            Logout
+        </a>
+    </div>
+
+</div>
+
+
+
+<div class="gallery-container">
+    <div class="gallery">
+        <!-- Images will be dynamically added here -->
+    </div>
+
+    <!-- Footer inside gallery container -->
+    <div id="footer" class="footer">
+        <img src="~/wwwroot/assets/images/Orca Icon Inverted Icon.png" alt="Footer Image" />
+        Hey there, you've reached the bottom. Thanks for visiting~
+    </div>
+</div>
+
+<div id="imageDetailsModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); z-index: 9999; justify-content: center; align-items: center; overflow-y: auto;">
+    <div class="modal-content" style="background: #eaeaea; padding: 20px; border-radius: 10px; width: 600px; margin: 20px auto; position: relative;">
+        <!-- Header with User Name -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <span id="modalUserName" style="font-size: 18px; font-weight: bold;">User Name</span>
+
+            <button type="button" data-download="modalImagePreview" style="background: none; border: none; cursor: pointer; position: absolute; top: 19px; right: 80px;">
+                <span>Download Image<span>
+            </button>
+
+            <!-- Close Button -->
+            <button onclick="closeImageDetailsModal()" style="background: none; border: none; cursor: pointer; position: absolute; top: 10px; right: 10px;">
+                <img src="~/wwwroot/assets/images/Delete.png" alt="Close Logo" style="width: 30px; height: 30px;" />
+            </button>
+        </div>
+
+        <!-- Image Preview -->
+        <div style="display: flex; justify-content: center; align-items: center; flex-grow: 1; overflow: hidden; margin-bottom: 10px;">
+            <img id="modalImagePreview" src="" alt="Image Preview" style="width: 400px; height: 300px; object-fit: contain;" />
+        </div>
+
+        <!-- Tags Display -->
+        <div>
+            <strong>Tags: </strong>
+            <span id="modalTags" style="display: inline-flex; flex-wrap: wrap; gap: 5px;"></span>
+        </div>
+
+        <!-- Like and Comment Buttons -->
+        <div style="display: flex; justify-content: left; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <button id="commentButton" style="background: none; border: none; cursor: pointer;">
+                <img src="~/wwwroot/assets/images/Comments icon.png" alt="Comment Logo" style="width: 20px; height: 20px; margin-top: 10px" />
+            </button>
+        </div>
+
+        <!-- Comment Section -->
+        <div id="commentSection" style="display: none; margin-top: 10px;">
+            <textarea id="commentInput" placeholder="Add a comment..." style="width: 100%; height: 40px; margin-bottom: 10px; padding: 5px; font-size: 14px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
+            <button onclick="addComment()" style="padding: 5px 10px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 5px;">Post</button>
+            <div id="commentsList" style="margin-top: 10px; padding: 0; overflow-y: auto; max-height: 250px;"></div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="gallery-container" style="width: 100%; height: 100vh; overflow-y: scroll;">
+    <div class="gallery" id="gallery" style="display: flex; flex-wrap: wrap; gap: 10px; margin-left: 70px; width: 100%; height: auto;">
+        <!-- Images will be dynamically added here -->
+    </div>
+</div>
+<!-- Image Upload Modal -->
+<div id="imageUploadModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
+    <div style="background: white; border-radius: 8px; padding: 10px; width: 650px; height: 690px; text-align: center; position: relative; display: flex; flex-direction: column; justify-content: space-between;">
+        <button onclick="closeModal()" style="position: absolute; top: 10px; right: 10px; background: transparent; border: none; font-size: 18px; cursor: pointer;">&times;</button>
+
+        <!-- Section with Border -->
+        <div style="
+    border: 2px dashed gray;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 25px auto 15px auto;
+    width: 95%;
+    height: 4750px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    text-align: center;
+    position: relative;
+">
+
+            <!-- Image Icon (Will be replaced with uploaded image) -->
+            <div id="uploadIconContainer" style="display: flex; justify-content: center; align-items: center; margin-top: 30px;">
+                <img id="imagePreview" src="~/wwwroot/assets/images/Upload-Image-Icon.png" alt="Upload Icon" style="width: 130px; height: 120px;">
+            </div>
+
+            <!-- Heading Text -->
+            <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; justify-content: center; text-align: center;">
+                Upload a photo
+                <img src="~/wwwroot/assets/images/Jpeg Icon.png" alt="Upload Icon" style="width: 44px; height: 44px;" />
+            </h2>
+
+            <!-- Instructions Text -->
+            <p style="font-size: 14px; color: #555;"><a href="#" style="color: #007bff; text-decoration: underline;" onclick="document.getElementById('imageInput').click();">Browse</a> to choose a file.</p>
+
+            <!-- Max File Size -->
+            <p style="font-size: 14px; color: #555;">Max 50 MB</p>
+
+            <!-- File Input (Hidden) -->
+            <input type="file" id="imageInput" style="display: none;" onchange="handleFileSelect(event)" />
+
+            <!-- Image Preview (Initially hidden) -->
+            <!-- Horizontal Text Layout -->
+            <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                <!-- Column 1 -->
+                <div style="flex: 1; text-align: left; padding: 0 10px;">
+                    <p style="font-size: 10px; color: #555;">• High-quality images (for photos, at least 5MP).</p>
+                    <p style="font-size: 10px; color: #555;">• Images are clear & original.</p>
+                </div>
+                <!-- Column 2 -->
+                <div style="flex: 1; text-align: left; padding: 0 10px;">
+                    <p style="font-size: 10px; color: #555;">• Only upload images you own the rights to.</p>
+                    <p style="font-size: 10px; color: #555;">• Zero tolerance for nudity, violence, or hate.</p>
+                </div>
+                <!-- Column 3 -->
+                <div style="flex: 1; text-align: left; padding: 0 10px;">
+                    <p style="font-size: 10px; color: #555;">• Respect the intellectual property of others.</p>
+                    <p style="font-size: 10px; color: #555;">• Follow basic respect.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tags Section -->
+        <div style="margin: 0 0 55px 0; display: flex; justify-content: space-between; padding: 0 20px;">
+            <div style="flex: 1; text-align: left;">
+                <label style="font-size: 12px; color: #333;">Tags:</label>
+                <!-- Container for Tags -->
+                <div id="tagsContainer" style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px;">
+                    <!-- Tags will be dynamically added here -->
+                </div>
+                <!-- Plus Icon for Adding Tags -->
+                <button onclick="addTag()" style="background: transparent; border: none; cursor: pointer; margin-bottom: 10px;">
+                    <img src="~/wwwroot/assets/images/Add icon.png" alt="Add Tag" style="width: 15px; height: 15px; margin-top: 10px" />
+                </button>
+            </div>
+            <!-- Post Button (Fixed Position) -->
+            <div style="position: absolute; right: 20px; bottom: 20px;">
+
+                <button id="postButton" style="background-color: black; color: white; border: none; border-radius: 50px; padding: 8px 20px; font-size: 14px; cursor: pointer;" onclick="uploadImage();">
+                    Post Image
+                </button>
+            </div>
+
+        </div>
+
+
+        <script>
+                let tagCount = 0;
+                let likeCount = 0;
+                let comments = [];
+
+                const galleryContainer = document.querySelector('.gallery-container');
+                const footer = document.getElementById('footer');
+
+                // Helper function to check if user has scrolled to bottom
+                function isScrolledToBottom() {
+                    const tolerance = 20; // Reduced tolerance
+                    const scrollPosition = galleryContainer.scrollTop;
+                    const visibleHeight = galleryContainer.clientHeight;
+                    const totalHeight = galleryContainer.scrollHeight;
+
+                    // Calculate how much content is left to scroll
+                    const remainingScroll = totalHeight - (scrollPosition + visibleHeight);
+
+                    // Only show footer when very close to bottom
+                    return remainingScroll <= tolerance;
+                }
+
+                // Debounce the scroll event for better performance
+                let scrollTimeout;
+                galleryContainer.addEventListener('scroll', () => {
+                    if (scrollTimeout) {
+                        clearTimeout(scrollTimeout);
+                    }
+
+                    scrollTimeout = setTimeout(() => {
+                        if (isScrolledToBottom()) {
+                            footer.style.opacity = '1';
+                            footer.style.visibility = 'visible';
+                        } else {
+                            footer.style.opacity = '0';
+                            footer.style.visibility = 'hidden';
+                        }
+                    }, 100); // Small delay to prevent rapid toggling
+                });
+
+                // Update footer styles
+                footer.style.cssText = `
+                    opacity: 0;
+                    visibility: hidden;
+                    background-color: rgba(51, 51, 51, 0.7);
+                    color: white;
+                    text-align: center;
+                    width: 100%;
+                    padding: 35px 20px;
+                    font-size: 12px;
+                    position: fixed;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    transition: opacity 0.3s ease, visibility 0.3s ease;
+                    z-index: 1000;
+                `;
+
+                // Enhanced commenting functionality
+                async function loadComments(imageId) {
+                    const commentsList = document.getElementById('commentsList');
+                    commentsList.innerHTML = '';
+
+                    try {
+                        const response = await fetch(`http://localhost:3000/images/${imageId}/comments`);
+                        const comments = await response.json();
+
+                        console.log('Comments received:', comments); // Debug log
+
+                        if (response.ok) {
+                            if (comments.length === 0) {
+                                commentsList.innerHTML = '<div class="no-comments" style="text-align: center; color: #666; padding: 20px;">No comments yet. Be the first to comment!</div>';
+                                return;
+                            }
+
+                            comments.forEach(comment => {
+                                console.log('Processing comment:', comment); // Debug log
+
+                                const commentElement = document.createElement('div');
+                                commentElement.classList.add('comment');
+
+                                const timestamp = new Date(comment.created_at).toLocaleString('en-US', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                });
+
+                                // Add null checks and default values
+                                const firstName = comment.first_name || 'Unknown';
+                                const lastName = comment.last_name || '';
+                                const fullName = `${firstName} ${lastName}`.trim();
+
+                                commentElement.innerHTML = `
+                                    <div class="comment-header">
+                                        <div class="comment-content">
+                                            <img class="comment-user-img" src="/wwwroot/assets/images/user-avatar.png" alt="User Avatar">
+                                            <div class="comment-user-info">
+                                                <span class="comment-username">${fullName}</span>
+                                                <span class="comment-date">${timestamp}</span>
+                                                <div class="comment-body">${comment.comment}</div>
+                                            </div>
+                                        </div>
+                                        ${comment.user_id == sessionStorage.getItem('userId') ? `
+                                            <button class="comment-action delete" onclick="deleteComment(${comment.id})">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        ` : ''}
+                                    </div>
+                                `;
+
+                                commentsList.appendChild(commentElement);
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error loading comments:', error);
+                        commentsList.innerHTML = '<div class="error-message">Failed to load comments. Please try again later.</div>';
+                    }
+                }
+
+                // Function to add a new comment
+                async function addComment() {
+                    const commentInput = document.getElementById('commentInput');
+                    const commentText = commentInput.value.trim();
+                    const imageId = window.currentImageId;
+                    const userId = sessionStorage.getItem('userId');
+
+                    if (!commentText) return;
+
+                    try {
+                        const response = await fetch(`http://localhost:3000/images/${imageId}/comment`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                userId: userId,
+                                comment: commentText
+                            }),
+                        });
+
+                        if (response.ok) {
+                            commentInput.value = '';
+                            await loadComments(imageId); // Reload all comments
+
+                            // Scroll to the bottom of comments
+                            const commentsList = document.getElementById('commentsList');
+                            commentsList.scrollTop = commentsList.scrollHeight;
+                        } else {
+                            const error = await response.json();
+                            throw new Error(error.message || 'Failed to post comment');
+                        }
+                    } catch (error) {
+                        console.error('Error posting comment:', error);
+                        alert('Failed to post comment. Please try again.');
+                    }
+                }
+
+                // Function to delete a comment
+                async function deleteComment(commentId) {
+                    if (!confirm('Are you sure you want to delete this comment?')) return;
+
+                    const userId = sessionStorage.getItem('userId');
+
+                    try {
+                        const response = await fetch(`http://localhost:3000/comments/${commentId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                userId: userId
+                            }),
+                        });
+
+                        if (response.ok) {
+                            await loadComments(window.currentImageId);
+                        } else {
+                            const error = await response.json();
+                            throw new Error(error.message || 'Failed to delete comment');
+                        }
+                    } catch (error) {
+                        console.error('Error deleting comment:', error);
+                        alert('Failed to delete comment. Please try again.');
+                    }
+                }
+
+                // Add this to your existing showImageDetailsModal function
+                document.getElementById('commentInput').addEventListener('input', function() {
+                    const postButton = document.querySelector('.post-comment-btn');
+                    postButton.disabled = !this.value.trim();
+                });
+
+                // Add character counter
+                document.getElementById('commentInput').addEventListener('input', function() {
+                    const maxLength = 500;
+                    const remaining = maxLength - this.value.length;
+                    const counter = document.getElementById('charCounter');
+                    if (counter) {
+                        counter.textContent = `${remaining} characters remaining`;
+                        counter.style.color = remaining < 50 ? '#dc3545' : '#666';
+                    }
+                });
+
+                // Toggle comment section visibility
+                document.getElementById('commentButton').addEventListener('click', () => {
+                    const commentSection = document.getElementById('commentSection');
+
+                    // Toggle display of the comment section
+                    if (commentSection.style.display === 'none' || commentSection.style.display === '') {
+                        commentSection.style.display = 'block';
+                    } else {
+                        commentSection.style.display = 'none';
+                    }
+                });
+
+                // Function to set current image ID when image is opened, and load comments
+                function openImageModal(imageId) {
+                    console.log('Opening image modal for Image ID:', imageId);  // Debugging imageId
+                    window.currentImageId = imageId;  // Set the current image ID
+                    loadComments(imageId);  // Load comments for this image
+                }
+
+                // Example: Open image modal for a specific image when clicked
+                document.querySelectorAll('.image-thumbnail').forEach(image => {
+                    image.addEventListener('click', () => {
+                        const imageId = image.getAttribute('data-image-id');
+                        console.log('Image thumbnail clicked. Image ID:', imageId);  // Debugging imageId
+                        openImageModal(imageId);  // Open the modal and load comments for the image
+                    });
+                });
+
+                // Ensure comments are loaded as soon as the page is loaded and if currentImageId is set
+                document.addEventListener('DOMContentLoaded', () => {
+                    // Check if currentImageId is already set (in case we are on the image detail page)
+                    if (window.currentImageId) {
+                        loadComments(window.currentImageId);
+                    }
+                });
+
+                document.getElementById('searchBar').addEventListener('input', debounce(searchImages, 300));
+
+                async function searchImages() {
+                    const searchQuery = document.getElementById('searchBar').value.trim().toLowerCase();
+                    if (searchQuery === '') {
+                        loadImages(); // If no search term, load all images
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch(`http://localhost:3000/search-images?tags=${encodeURIComponent(searchQuery)}`);
+                        if (!response.ok) {
+                            console.error('Failed to fetch images based on search:', response.statusText);
+                            return;
+                        }
+                        const images = await response.json();
+                        const userId = sessionStorage.getItem('userId');
+
+                        // Get liked images for the current user
+                        const likedResponse = await fetch(`http://localhost:3000/user/${userId}/liked-images`);
+                        if (!likedResponse.ok) {
+                            console.error('Failed to fetch liked images:', likedResponse.statusText);
+                            return;
+                        }
+                        const likedImages = await likedResponse.json();
+                        const likedImageIds = Array.isArray(likedImages) ? likedImages.map((img) => img.id) : [];
+
+                        const gallery = document.querySelector('.gallery');
+                        gallery.innerHTML = '';
+
+                        // Create three columns
+                        const columns = [
+                            document.createElement('div'),
+                            document.createElement('div'),
+                            document.createElement('div')
+                        ];
+
+                        columns.forEach(column => {
+                            column.className = 'gallery-column';
+                            gallery.appendChild(column);
+                        });
+
+                        // Distribute images among columns
+                        images.forEach((image, index) => {
+                            const galleryItem = document.createElement('div');
+                            galleryItem.className = 'gallery-item';
+
+                            const img = document.createElement('img');
+                            img.src = `http://localhost:3000${image.image_url}`;
+                            img.alt = 'Gallery Image';
+
+                            // Add click handler for image modal
+                            img.addEventListener('click', () => {
+                                showImageDetailsModal(image);
+                            });
+
+                            // Create heart icon for likes
+                            const heartIcon = document.createElement('div');
+                            heartIcon.className = 'heart-icon';
+                            if (likedImageIds.includes(image.id)) {
+                                heartIcon.classList.add('liked');
+                            }
+
+                            // Add like functionality
+                            heartIcon.addEventListener('click', async (event) => {
+                                event.stopPropagation();
+                                const isLiked = heartIcon.classList.contains('liked');
+
+                                try {
+                                    const response = await fetch(`http://localhost:3000/images/${image.id}/like`, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                                            userId: userId,
+                                            action: isLiked ? 'unlike' : 'like'
+                                        }),
+                                    });
+
+                                    if (response.ok) {
+                                        heartIcon.classList.toggle('liked');
+                                    } else {
+                                        console.error('Failed to update like status');
+                                    }
+                                } catch (error) {
+                                    console.error('Error updating like status:', error);
+                                }
+                            });
+
+                            galleryItem.appendChild(img);
+                            galleryItem.appendChild(heartIcon);
+
+                            // Distribute images evenly across columns
+                            const columnIndex = index % 3;
+                            columns[columnIndex].appendChild(galleryItem);
+                        });
+
+                        // Apply ScrollReveal to each column
+                        columns.forEach((column, index) => {
+                            sr.reveal(column.children, {
+                                origin: 'bottom',
+                                distance: '15px',
+                                duration: 800,
+                                interval: 50,
+                                delay: index * 50,
+                                opacity: 0,
+                                cleanup: false,
+                                beforeReveal: (el) => {
+                                    el.style.opacity = '0';
+                                    el.style.transform = 'translateY(15px)';
+                                    el.style.transition = 'opacity 800ms ease-out, transform 800ms ease-out';
+                                },
+                                afterReveal: (el) => {
+                                    el.style.opacity = '1';
+                                    el.style.transform = 'translateY(0)';
+                                },
+                                beforeReset: (el) => {
+                                    el.style.opacity = '1';
+                                    el.style.transform = 'translateY(0)';
+                                },
+                                afterReset: (el) => {
+                                    el.style.opacity = '0';
+                                    el.style.transform = 'translateY(15px)';
+                                }
+                            });
+                        });
+
+                    } catch (error) {
+                        console.error('Error fetching searched images:', error);
+                    }
+                }
+
+
+                async function loadImages() {
+                    const userId = sessionStorage.getItem('userId');
+                    if (!userId) {
+                        console.error('User is not logged in');
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('http://localhost:3000/images');
+                        if (!response.ok) {
+                            console.error('Failed to fetch images:', response.statusText);
+                            return;
+                        }
+                        const images = await response.json();
+
+                        // Get liked images for the current user
+                        const likedResponse = await fetch(`http://localhost:3000/user/${userId}/liked-images`);
+                        if (!likedResponse.ok) {
+                            console.error('Failed to fetch liked images:', likedResponse.statusText);
+                            return;
+                        }
+                        const likedImages = await likedResponse.json();
+                        const likedImageIds = Array.isArray(likedImages) ? likedImages.map((img) => img.id) : [];
+
+                        const gallery = document.querySelector('.gallery');
+                        gallery.innerHTML = '';
+
+                        // Create three columns
+                        const columns = [
+                            document.createElement('div'),
+                            document.createElement('div'),
+                            document.createElement('div')
+                        ];
+
+                        columns.forEach(column => {
+                            column.className = 'gallery-column';
+                            gallery.appendChild(column);
+                        });
+
+                        // Distribute images among columns
+                        images.forEach((image, index) => {
+                            const galleryItem = document.createElement('div');
+                            galleryItem.className = 'gallery-item';
+
+                            const img = document.createElement('img');
+                            img.src = `http://localhost:3000${image.image_url}`;
+                            img.alt = 'Gallery Image';
+
+                            // Add click handler for image modal
+                            img.addEventListener('click', () => {
+                                showImageDetailsModal(image);
+                            });
+
+                            // Create heart icon for likes
+                            const heartIcon = document.createElement('div');
+                            heartIcon.className = 'heart-icon';
+                            if (likedImageIds.includes(image.id)) {
+                                heartIcon.classList.add('liked');
+                            }
+
+                            // Add like functionality
+                            heartIcon.addEventListener('click', async (event) => {
+                                event.stopPropagation();
+                                const isLiked = heartIcon.classList.contains('liked');
+
+                                try {
+                                    const response = await fetch(`http://localhost:3000/images/${image.id}/like`, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                                            userId: userId,
+                                            action: isLiked ? 'unlike' : 'like'
+                                        }),
+                                    });
+
+                                    if (response.ok) {
+                                        heartIcon.classList.toggle('liked');
+                                    } else {
+                                        console.error('Failed to update like status');
+                                    }
+                                } catch (error) {
+                                    console.error('Error updating like status:', error);
+                                }
+                            });
+
+                            galleryItem.appendChild(img);
+                            galleryItem.appendChild(heartIcon);
+
+                            const columnIndex = index % 3;
+                            columns[columnIndex].appendChild(galleryItem);
+                        });
+
+                        // Apply ScrollReveal to each column
+                        columns.forEach((column, index) => {
+                            sr.reveal(column.children, {
+                                origin: 'bottom',
+                                distance: '15px',
+                                duration: 800,
+                                interval: 50,
+                                delay: index * 50,
+                                opacity: 0,
+                                cleanup: false,
+                                beforeReveal: (el) => {
+                                    el.style.opacity = '0';
+                                    el.style.transform = 'translateY(15px)';
+                                    el.style.transition = 'opacity 800ms ease-out, transform 800ms ease-out';
+                                },
+                                afterReveal: (el) => {
+                                    el.style.opacity = '1';
+                                    el.style.transform = 'translateY(0)';
+                                },
+                                beforeReset: (el) => {
+                                    el.style.opacity = '1';
+                                    el.style.transform = 'translateY(0)';
+                                },
+                                afterReset: (el) => {
+                                    el.style.opacity = '0';
+                                    el.style.transform = 'translateY(15px)';
+                                }
+                            });
+                        });
+
+                    } catch (error) {
+                        console.error('Error loading images:', error);
+                    }
+                }
+
+
+                // Debounce function to limit the number of search requests
+                function debounce(func, delay) {
+                    let timeout;
+                    return function () {
+                        clearTimeout(timeout);
+                        timeout = setTimeout(func, delay);
+                    };
+                }
+
+
+                // Initial load of images when the page loads
+                document.addEventListener('DOMContentLoaded', loadImages);
+
+
+
+                // Function to open the image modal and load the details
+                async function showImageDetailsModal(image) {
+                    const modal = document.getElementById('imageDetailsModal');
+                    const modalImage = document.getElementById('modalImagePreview');
+                    const modalUserName = document.getElementById('modalUserName');
+                    const modalTags = document.getElementById('modalTags');
+
+                    // Set the current image ID
+                    window.currentImageId = image.id;
+
+                    // Clear previous content
+                    modalTags.innerHTML = '';
+
+                    // Set image details
+                    modalImage.src = `http://localhost:3000${image.image_url}`;
+                    modalUserName.textContent = image.first_name || 'Unknown';
+
+                    // Process and display tags
+                    const tags = Array.isArray(image.tags) ? image.tags :
+                                image.tags ? image.tags.split(',').map(tag => tag.trim()) : [];
+
+                    tags.forEach(tag => {
+                        const tagElement = document.createElement('span');
+                        tagElement.classList.add('tag');
+                        tagElement.textContent = tag;
+                        tagElement.style.cssText = `
+                            background-color: #d3d3d3;
+                            padding: 6px 12px;
+                            margin: 2px;
+                            border-radius: 6px;
+                            font-size: 14px;
+                            color: black;
+                            display: inline-block;
+                            text-align: center;
+                            font-weight: bold;
+                        `;
+                        modalTags.appendChild(tagElement);
+                    });
+
+                    // Load comments
+                    await loadComments(image.id);
+
+                    // Show modal with animation
+                    modal.style.display = 'flex';
+                    modal.style.opacity = '0';
+                    setTimeout(() => {
+                        modal.style.opacity = '1';
+                    }, 10);
+                }
+
+                function closeImageDetailsModal() {
+                    const modal = document.getElementById('imageDetailsModal');
+                    modal.style.opacity = '0';
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                    }, 300);
+                }
+
+                // Add download functionality
+                document.querySelectorAll("[data-download]").forEach(button => {
+                    button.addEventListener("click", (event) => {
+                        event.preventDefault();
+                        const imageId = button.getAttribute("data-download");
+                        const image = document.getElementById(imageId);
+
+                        if (image) {
+                            const a = document.createElement("a");
+                            a.href = image.src;
+                            a.download = image.src.split('/').pop();
+                            a.target = "_self";
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                        }
+                    });
+                });
+
+                function openModal() {
+                    document.getElementById('imageUploadModal').style.display = 'flex';
+                }
+
+                function closeModal() {
+                    document.getElementById('imageUploadModal').style.display = 'none';
+                }
+
+                document.addEventListener('DOMContentLoaded', () => {
+                    const userId = sessionStorage.getItem('userId');
+
+                    if (!userId) {
+                        window.location.href = '/Home/LoginPage';
+                    } else {
+                        console.log('User is logged in with userId:', userId);
+                    }
+                });
+
+
+
+
+                async function uploadImage() {
+                    const imageInput = document.getElementById('imageInput');
+                    const tags = [];
+                    const tagDivs = document.querySelectorAll('.tag');
+
+                    // Collect the tags from the tag divs
+                    tagDivs.forEach(tag => {
+                        tags.push(tag.textContent.trim());
+                    });
+
+                    // Check if image is uploaded
+                    if (!imageInput.files[0]) {
+                        alert("Please upload an image.");
+                        return;
+                    }
+
+                    // Check if at least 3 tags are added
+                    if (tags.length < 3) {
+                        alert("Please add at least 3 tags.");
+                        return;
+                    }
+
+                    const formData = new FormData();
+                    formData.append('image', imageInput.files[0]);
+                    formData.append('tags', JSON.stringify(tags));
+                    formData.append('userId', sessionStorage.getItem('userId'));
+
+                    try {
+                        const response = await fetch('http://localhost:3000/upload', {
+                            method: 'POST',
+                            body: formData,
+                        });
+
+                        const result = await response.json();
+
+                        if (response.ok) {
+                            alert('Image uploaded successfully');
+                            closeModal();
+                            loadImages();
+                        } else {
+                            alert(result.error || 'Failed to upload image');
+                        }
+                    } catch (error) {
+                        console.error('Error uploading image:', error);
+                        alert('An error occurred while uploading the image.');
+                    }
+                }
+
+                heartIcon.addEventListener('click', async (event) => {
+                    event.stopPropagation(); // Prevent triggering parent event handlers
+
+                    const imageId = image.id; // ID of the image being liked/unliked
+                    const userId = sessionStorage.getItem('userId'); // Get the current user's ID from session storage
+
+                    // Toggle the 'liked' class to visually indicate the state
+                    const isLiked = heartIcon.classList.toggle('liked');
+
+                    try {
+                        const response = await fetch(`/images/${imageId}/${isLiked ? 'like' : 'unlike'}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                userId: userId, // Send userId to identify the user performing the action
+                            }),
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            if (isLiked) {
+                                console.log('Image liked successfully');
+                            } else {
+                                console.log('Image unliked successfully');
+                            }
+                        } else {
+                            console.error(data.error || 'Failed to process like/unlike action');
+                            // Revert the class toggle if the action fails
+                            heartIcon.classList.toggle('liked');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        // Revert the class toggle if an error occurs
+                        heartIcon.classList.toggle('liked');
+                    }
+                });
+
+                function addTag() {
+                    // Allow the user to add as many tags as they want, no restriction
+                    const tagInput = document.createElement("input");
+                    tagInput.type = "text";
+                    tagInput.placeholder = "Enter tag";
+                    tagInput.style = "border: 1px solid #ccc; border-radius: 5px; padding: 1px 5px; font-size: 12px; width: 90px; height: 20px; margin-right: 5px; color: black !important; background-color: white;";
+                    tagInput.maxLength = 20;
+
+                    tagInput.addEventListener("blur", function () {
+                        const tagText = tagInput.value.trim();
+                        if (tagText !== "") {
+                            const tagDiv = document.createElement("div");
+                            tagDiv.classList.add("tag");
+                            tagDiv.style = "background-color: #d1d1d1; color: #555; border-radius: 3px; padding: 3px 10px; font-size: 12px; margin-top: 5px; display: flex; align-items: center; gap: 5px;";
+                            tagDiv.textContent = tagText;
+
+                            const deleteIcon = document.createElement("img");
+                            deleteIcon.src = "https://img.icons8.com/ios/50/000000/trash.png";
+                            deleteIcon.alt = "Delete";
+                            deleteIcon.style = "width: 15px; height: 15px; cursor: pointer;";
+                            deleteIcon.onclick = function () {
+                                tagDiv.remove();
+                                tagCount--;
+                            };
+
+                            tagDiv.appendChild(deleteIcon);
+                            document.getElementById("tagsContainer").appendChild(tagDiv);
+                            tagCount++;
+                        }
+                        tagInput.remove();
+                    });
+
+                    document.getElementById("tagsContainer").appendChild(tagInput);
+                    tagInput.focus();
+                }
+         function logout() {
+        window.location.href = '@Url.Action("LoginPage", "Home")';  }
+
+
+                function redirectToProfile() {
+                    window.location.href = '/Home/ProfilePage';  // Use the controller and action for routing
+                }
+
+                // File preview handler
+                function handleFileSelect(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const uploadIconContainer = document.getElementById('uploadIconContainer');
+                        uploadIconContainer.innerHTML = `<img id="imagePreview" src="" alt="Image Preview" style="width: 20%; height: auto; object-fit: contain;" />`;
+
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const imagePreview = document.getElementById('imagePreview');
+                            imagePreview.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+
+                // Make sure the comment section is properly initialized when the modal opens
+                document.addEventListener('DOMContentLoaded', function() {
+                    const commentSection = document.getElementById('commentSection');
+                    const commentButton = document.getElementById('commentButton');
+
+                    if (commentButton && commentSection) {
+                        commentButton.onclick = function() {
+                            if (commentSection.style.display === 'none' || commentSection.style.display === '') {
+                                commentSection.style.display = 'block';
+                                if (window.currentImageId) {
+                                    loadComments(window.currentImageId);
+                                }
+                            } else {
+                                commentSection.style.display = 'none';
+                            }
+                        };
+                    }
+                });
+
+                // Add event listener for Enter key in comment input
+                document.addEventListener('click', function(e) {
+                    if (e.target && e.target.id === 'commentInput') {
+                        e.target.addEventListener('keypress', function(e) {
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                                e.preventDefault();
+                                addComment();
+                            }
+                        });
+                    }
+                });
+        </script>
+
+        <div id="imagePreviewContainer" style="margin-top: 20px; display: none;">
+            <img id="imagePreview" src="" alt="Image Preview" style="max-width: 100%; max-height: 300px; object-fit: contain;" />
+        </div>
+        <div id="imageDetailsModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); z-index: 9999; justify-content: center; align-items: center; overflow-y: auto;">
+            <div class="modal-content" style="background: #eaeaea; padding: 20px; border-radius: 10px; width: 600px; margin: 20px auto; position: relative;">
+                <h2>Image Details</h2>
+                <div>
+                    <img id="modalImagePreview" src="" alt="Image Preview" style="max-width: 100%; max-height: 400px; object-fit: contain;" />
+                </div>
+                <p><strong>User: </strong><span id="modalUserName"></span></p>
+                <p>
+                    <strong>Likes: </strong><span id="modalLikes"></span>
+                </p>
+                <p><strong>Tags: </strong><span id="modalTags"></span></p>
+                <button onclick="closeImageDetailsModal()">Close</button>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const sr = ScrollReveal({
+                    distance: '15px',
+                    duration: 800,
+                    easing: 'ease-out',
+                    interval: 50,
+                    scale: 1,
+                    viewFactor: 0.2,
+                    opacity: 0,
+                    mobile: true,
+                    container: document.querySelector('.gallery-container'),
+                    reset: true
+                });
+
+                async function loadImages() {
+                    const userId = sessionStorage.getItem('userId');
+                    if (!userId) {
+                        console.error('User is not logged in');
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('http://localhost:3000/images');
+                        if (!response.ok) {
+                            console.error('Failed to fetch images:', response.statusText);
+                            return;
+                        }
+                        const images = await response.json();
+
+                        // Get liked images for the current user
+                        const likedResponse = await fetch(`http://localhost:3000/user/${userId}/liked-images`);
+                        if (!likedResponse.ok) {
+                            console.error('Failed to fetch liked images:', likedResponse.statusText);
+                            return;
+                        }
+                        const likedImages = await likedResponse.json();
+                        const likedImageIds = Array.isArray(likedImages) ? likedImages.map((img) => img.id) : [];
+
+                        const gallery = document.querySelector('.gallery');
+                        gallery.innerHTML = '';
+
+                        // Create three columns
+                        const columns = [
+                            document.createElement('div'),
+                            document.createElement('div'),
+                            document.createElement('div')
+                        ];
+
+                        columns.forEach(column => {
+                            column.className = 'gallery-column';
+                            gallery.appendChild(column);
+                        });
+
+                        // Distribute images among columns
+                        images.forEach((image, index) => {
+                            const galleryItem = document.createElement('div');
+                            galleryItem.className = 'gallery-item';
+
+                            const img = document.createElement('img');
+                            img.src = `http://localhost:3000${image.image_url}`;
+                            img.alt = 'Gallery Image';
+
+                            // Add click handler for image modal
+                            img.addEventListener('click', () => {
+                                showImageDetailsModal(image);
+                            });
+
+                            // Create heart icon for likes
+                            const heartIcon = document.createElement('div');
+                            heartIcon.className = 'heart-icon';
+                            if (likedImageIds.includes(image.id)) {
+                                heartIcon.classList.add('liked');
+                            }
+
+                            // Add like functionality
+                            heartIcon.addEventListener('click', async (event) => {
+                                event.stopPropagation();
+                                const isLiked = heartIcon.classList.contains('liked');
+
+                                try {
+                                    const response = await fetch(`http://localhost:3000/images/${image.id}/like`, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                                            userId: userId,
+                                            action: isLiked ? 'unlike' : 'like'
+                                        }),
+                                    });
+
+                                    if (response.ok) {
+                                        heartIcon.classList.toggle('liked');
+                                    } else {
+                                        console.error('Failed to update like status');
+                                    }
+                                } catch (error) {
+                                    console.error('Error updating like status:', error);
+                                }
+                            });
+
+                            galleryItem.appendChild(img);
+                            galleryItem.appendChild(heartIcon);
+
+                            // Distribute images evenly across columns
+                            const columnIndex = index % 3;
+                            columns[columnIndex].appendChild(galleryItem);
+                        });
+
+                        // Apply ScrollReveal to each column
+                        columns.forEach((column, index) => {
+                            sr.reveal(column.children, {
+                                origin: 'bottom',
+                                distance: '15px',
+                                duration: 800,
+                                interval: 50,
+                                delay: index * 50,
+                                opacity: 0,
+                                cleanup: false,
+                                beforeReveal: (el) => {
+                                    el.style.opacity = '0';
+                                    el.style.transform = 'translateY(15px)';
+                                    el.style.transition = 'opacity 800ms ease-out, transform 800ms ease-out';
+                                },
+                                afterReveal: (el) => {
+                                    el.style.opacity = '1';
+                                    el.style.transform = 'translateY(0)';
+                                },
+                                beforeReset: (el) => {
+                                    el.style.opacity = '1';
+                                    el.style.transform = 'translateY(0)';
+                                },
+                                afterReset: (el) => {
+                                    el.style.opacity = '0';
+                                    el.style.transform = 'translateY(15px)';
+                                }
+                            });
+                        });
+
+                    } catch (error) {
+                        console.error('Error loading images:', error);
+                    }
+                }
+
+                loadImages();
+
+                // Updated footer visibility logic with stricter conditions
+                const galleryContainer = document.querySelector('.gallery-container');
+                const footer = document.getElementById('footer');
+                const gallery = document.querySelector('.gallery');
+
+                // Add padding to gallery to ensure proper spacing
+                gallery.style.paddingBottom = '200px'; // Added extra padding at bottom
+
+                function isScrolledToBottom() {
+                    const tolerance = 5; // Very small tolerance
+                    const scrollPosition = galleryContainer.scrollTop;
+                    const visibleHeight = galleryContainer.clientHeight;
+                    const totalHeight = galleryContainer.scrollHeight;
+                    const remainingScroll = totalHeight - (scrollPosition + visibleHeight);
+
+                    // Debug information
+                    console.log('Scroll Position:', scrollPosition);
+                    console.log('Visible Height:', visibleHeight);
+                    console.log('Total Height:', totalHeight);
+                    console.log('Remaining Scroll:', remainingScroll);
+
+                    // Only show footer when extremely close to bottom
+                    return remainingScroll <= tolerance && scrollPosition > 100; // Ensure some scrolling has occurred
+                }
+
+                // Improved scroll handler with better debouncing
+                let scrollTimeout;
+                let isFooterVisible = false;
+
+                galleryContainer.addEventListener('scroll', () => {
+                    if (scrollTimeout) {
+                        clearTimeout(scrollTimeout);
+                    }
+
+                    scrollTimeout = setTimeout(() => {
+                        const shouldShowFooter = isScrolledToBottom();
+
+                        // Only update if state needs to change
+                        if (shouldShowFooter !== isFooterVisible) {
+                            isFooterVisible = shouldShowFooter;
+
+                            if (shouldShowFooter) {
+                                footer.style.opacity = '1';
+                                footer.style.visibility = 'visible';
+                            } else {
+                                footer.style.opacity = '0';
+                                footer.style.visibility = 'hidden';
+                            }
+                        }
+                    }, 150); // Slightly increased delay for stability
+                });
+
+                // Updated footer styles with adjusted positioning
+                footer.style.cssText = `
+                    opacity: 0;
+                    visibility: hidden;
+                    background-color: rgba(51, 51, 51, 0.7);
+                    color: white;
+                    text-align: center;
+                    width: 100%;
+                    padding: 35px 20px;
+                    font-size: 12px;
+                    position: fixed;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    transition: opacity 0.3s ease, visibility 0.3s ease;
+                    z-index: 1000;
+                    pointer-events: none; /* Prevent footer from interfering with scrolling */
+                `;
+
+                // Add resize handler to recalculate positions
+                window.addEventListener('resize', () => {
+                    if (scrollTimeout) {
+                        clearTimeout(scrollTimeout);
+                    }
+                    scrollTimeout = setTimeout(() => {
+                        const shouldShowFooter = isScrolledToBottom();
+                        if (shouldShowFooter !== isFooterVisible) {
+                            isFooterVisible = shouldShowFooter;
+                            footer.style.opacity = shouldShowFooter ? '1' : '0';
+                            footer.style.visibility = shouldShowFooter ? 'visible' : 'hidden';
+                        }
+                    }, 150);
+                });
+            });
+        </script>

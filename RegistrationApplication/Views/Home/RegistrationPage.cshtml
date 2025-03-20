@@ -2,19 +2,39 @@
     Layout = "~/Views/Shared/_RegistrationApplicationLayout.cshtml";
 }
 
-<div class="row center" ng-app="myApp" ng-init="renderingNotification()" style="position: relative;">
+<div class="row center" ng-app="myApp" ng-controller="myController" style="position: relative;">
+
     <!-- Main Page Header -->
     <div class="col s12 m12 l12" style="margin-bottom: 120px;"> </div>
+    <div style="position: absolute; top: 20px; left: 50px;">
+        <h1 class="brand-title">Pinoy<span>Fix</span></h1>
+    </div>
+    <style>
+        .brand-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 900;
+            font-size: 60px;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+            margin: 0;
+        }
 
+            .brand-title span {
+                color: #FFD700; /* Gold highlight for "Fix" */
+            }
+        </style>
+    
     <!-- Left Side -->
     <div class="col s12 m2 l2"> </div>
 
     <!-- Middle Content -->
-    <div class="registration-main-content col s12 m8 l8" ng-init="userAccessFunc()">
+    <div class="registration-main-content col s12 m8 l8">
         <div class="row">
             <div class="col s12 m12">
                 <div class="z-depth-5 card blue-grey darken-1"
-                     style="border-radius: 10px; display: flex; flex-wrap: wrap; background-color: rgba(43, 39, 56, 0.8) !important; height: 630px;">
+                     style="border-radius: 10px; display: flex; flex-wrap: wrap; background-color: rgba(43, 39, 56, 0.8) !important; height: 650px;">
                     <script>
                         ScrollReveal({
                             reset: true,
@@ -22,7 +42,7 @@
                             duration: 2500,
                             delay: 400,
                         });
-                        ScrollReveal().reveal('.registration-main-content', { distance: '-50px', delay: '500'});
+                        ScrollReveal().reveal('.registration-main-content', { distance: '-50px', delay: '500' });
                     </script>
 
                     <!-- Card Image -->
@@ -33,74 +53,74 @@
 
                     <!-- Right Side Form -->
                     <div class="card-content white-text" style="flex: 1 1 60%; padding: 45px; display: flex; flex-direction: column; justify-content: center;">
-                        <span class="card-title" style="text-align: left; font-size: 40px; margin-bottom: 2px; font-weight: 800; color:floralwhite; ">Let's get you started</span>
-                        <span class="card-title" style="text-align: left; font-size: 14px; font-weight: 300; font-style: italic; margin-top: 15px; color: floralwhite; ">Enter the details to get going.</span>
+                        <h5 style="color: white;">Step 1 to 3</h5>
+                        <span class="card-title" style="text-align: left; font-size: 40px; margin-bottom: 2px; font-weight: 800; color:floralwhite;">Let's get you started</span>
+                        <span class="card-title" style="text-align: left; font-size: 14px; font-weight: 300; font-style: italic; margin-top: 15px; color: floralwhite;">Enter the details to get going.</span>
 
-                        <!-- Form Fields -->
-                        <div class="row">
-                            <div class="input-field col s12 m12 l4">
-                                <input id="first_name" type="text" class="validate" ng-model="first_name">
-                                <label for="first_name">First Name</label>
-                            </div>
-                            <div class="input-field col s12 m12 l4 ">
-                                <input id="middle_name" type="text" class="validate" ng-model="middle_name">
-                                <label for="middle_name">Middle Name</label>
-                            </div>
-                            <div class="input-field col s12 m12 l4">
-                                <input id="last_name" type="text" class="validate" ng-model="last_name">
-                                <label for="last_name">Last Name</label>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <input id="address" type="text" class="validate" ng-model="address">
-                                <label for="address">Address</label>
-                            </div>
-                        </div>
-
-                        <div class="row" style="height: 130px; margin-bottom: 0px">
-                            <div class="input-field col s12 m12 l4">
-                                <input id="phone_number" type="text"
-                                       ng-model="phone_number"
-                                       ng-change="validatePhoneNumber()"
-                                       ng-blur="validatePhoneNumber()"
-                                       ng-style="{'border-bottom': phone_number_error ? '2px solid red' : (phone_number ? '2px solid #6ed0a2' : '')}">
-                                <label for="phone_number">Phone Number</label>
-                                <!-- Validation Error Message -->
-                                <small class="error-text" ng-if="phone_number_error" style="color: red;">Phone number must be 11 digits.</small>
+                        <form ng-submit="submitFunc()" novalidate>
+                            <div class="row">
+                                <div class="input-field col s12 m12 l4">
+                                    <input id="first_name" type="text" class="validate" ng-model="first_name">
+                                    <label for="first_name">First Name</label>
+                                </div>
+                                <div class="input-field col s12 m12 l4">
+                                    <input id="middle_name" type="text" class="validate" ng-model="middle_name">
+                                    <label for="middle_name">Middle Name</label>
+                                </div>
+                                <div class="input-field col s12 m12 l4">
+                                    <input id="last_name" type="text" class="validate" ng-model="last_name">
+                                    <label for="last_name">Last Name</label>
+                                </div>
                             </div>
 
-                            <div class="input-field col s12 m12 l4">
-                                <input id="email" type="email"
-                                       ng-model="email"
-                                       ng-change="validateEmail()"
-                                       ng-blur="validateEmail()"
-                                       ng-style="{'border-bottom': email_error ? '2px solid red' : (email ? '2px solid #6ed0a2' : '')}">
-                                <label for="email">Email</label>
-                                <!-- Validation Error Message -->
-                                <small class="error-text" ng-if="email_error" style="color: red;">Please enter a valid email. (example@example.com)</small>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="address" type="text" class="validate" ng-model="address">
+                                    <label for="address">Address</label>
+                                </div>
                             </div>
 
-                            <div class="input-field col s12 m12 l4">
-                                <input id="password" type="password" class="validate" ng-model="password">
-                                <label for="password">Password</label>
-                            </div>
-                        </div>
+                            <div class="row" style="height: 130px; margin-bottom: 70px;">
+                                <div class="input-field col s12 m12 l4">
+                                    <input id="phone_number" type="text"
+                                           ng-model="phone_number"
+                                           ng-change="validatePhoneNumber()"
+                                           ng-blur="validatePhoneNumber()"
+                                           ng-style="{'border-bottom': validationErrors.phone_number_error ? '2px solid red' : (phone_number ? '2px solid #6ed0a2' : '')}">
+                                    <label for="phone_number">Phone Number</label>
+                                    <small class="error-text" ng-if="validationErrors.phone_number_error" style="color: red;">Phone number must be 11 digits.</small>
+                                </div>
 
-                        <!-- Buttons -->
-                        <div class="row">
-                            <div class="col s12 m6">
-                                <a class="waves-effect waves-light btn-large col s12"
-                                   style="border-radius: 100px; background-color: #6e54b5; margin-bottom: 12px; font-weight: 700; animation: flash 500ms alternate"
-                                   ng-click="submitFunc()">Submit</a>
+                                <div class="input-field col s12 m12 l4">
+                                    <input id="email" type="email"
+                                           ng-model="email"
+                                           ng-change="validateEmail()"
+                                           ng-blur="validateEmail()"
+                                           ng-style="{'border-bottom': validationErrors.email_error ? '2px solid red' : (email ? '2px solid #6ed0a2' : '')}">
+                                    <label for="email">Email</label>
+                                    <small class="error-text" ng-if="validationErrors.email_error" style="color: red;">Please enter a valid email. (example@example.com)</small>
+                                </div>
+
+                                <div class="input-field col s12 m12 l4">
+                                    <input id="password" type="password" class="validate"
+                                           ng-model="password"
+                                           ng-change="validatePassword()"
+                                           ng-blur="validatePassword()"
+                                           ng-style="{'border-bottom': validationErrors.password_error ? '2px solid red' : (password ? '2px solid #6ed0a2' : '')}">
+                                    <label for="password">Password</label>
+                                    <small class="error-text" ng-if="validationErrors.password_error" style="color: red;">Password must be 8-20 characters and include a capital letter, number, and special character (!, #, $, %).</small>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col s12 m6">
+                                        <button type="submit" class="waves-effect waves-light btn-large col s12" style="border-radius: 100px; background-color: #6e54b5; margin-bottom: 12px; font-weight: 700;">Submit</button>
+                                    </div>
+                                    <div class="col s12 m6">
+                                        <button type="button" class="waves-effect waves-light btn-large col s12" style="border-radius: 100px; background-color: #6e54b5; margin-bottom: 12px; font-weight: 700;" ng-click="cancelFunc()">Cancel</button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col s12 m6">
-                                <a class="waves-effect waves-light btn-large col s12"
-                                   style="border-radius: 100px; background-color: #6e54b5; margin-bottom: 12px; font-weight:700;"
-                                   ng-click="cancelFunc()">Cancel</a>
-                            </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -113,8 +133,3 @@
     <!-- Footer -->
     <div class="col s12 m12 l12"> </div>
 </div>
-
-<style>
-
-    
-</style>

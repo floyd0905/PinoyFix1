@@ -1,0 +1,168 @@
+﻿@{
+    Layout = "~/Views/Shared/_RegistrationApplicationLayout.cshtml";
+}
+
+<div class="row center" ng-app="myApp" ng-controller="myController" style="position: relative;">
+    <!-- Main Page Header -->
+    <div class="col s12 m12 l12" style="margin-bottom: 120px;">
+        <div class="pinoyfix-banner">
+            <h1 class="brand-title">Pinoy<span>Fix</span></h1>
+        </div>
+
+    </div>
+
+    <!-- Left Side -->
+    <div class="col s12 m2 l2"> </div>
+
+    <!-- Middle Content -->
+    <div class="registration-main-content col s12 m8 l8">
+        <div class="row">
+            <div class="col s12 m12">
+                <div class="z-depth-5 card blue-grey darken-1"
+                     style="border-radius: 10px; display: flex; flex-wrap: wrap; background-color: rgba(43, 39, 56, 0.8) !important; height: 600px; width: 900px; bottom: 20px;">
+
+                    <!-- Pricing Plans Section Inside Grey Card -->
+                    <div class="plans-section" style="width: 100%; text-align: center; padding: 20px;">
+                        <h3 style="color: white; margin-bottom: 10px;">Step 2 to 3</h3>
+                        <h1 style="color: white; font-weight: bold; margin-bottom: 30px;">PLANS</h1>
+
+                        <div class="row" style="display: flex; justify-content: center; gap: 20px;">
+                            <!-- Basic Plan -->
+                            <div class="plan-card" onclick="redirectTo('MOP')">
+                                <h2>Basic</h2>
+                                <p>Monthly Price<br>₱50</p>
+                                <ul>
+                                    <li> Account</li>
+                                    <li> View</li>
+                                    <li> Posting</li>
+                                    <li> Boost Post</li>
+                                </ul>
+                            </div>
+
+                            <!-- Business Basic Plan -->
+                            <div class="plan-card" onclick="redirectTo('MOP')">
+                                <h2>Business Basic</h2>
+                                <p>Monthly Price<br>₱100</p>
+                                <ul>
+                                    <li> Account</li>
+                                    <li> View</li>
+                                    <li> Posting (5x)</li>
+                                    <li> Boost Post</li>
+                                </ul>
+                            </div>
+
+                            <!-- Business Pro Plan -->
+                            <div class="plan-card" onclick="redirectTo('MOP')">
+                                <h2>Business Pro</h2>
+                                <p>Monthly Price<br>₱150</p>
+                                <ul>
+                                    <li> Account</li>
+                                    <li> View</li>
+                                    <li> Posting (15x)</li>
+                                    <li> Boost Post (5x)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        ScrollReveal({
+                            reset: true,
+                            distance: '60px',
+                            duration: 2500,
+                            delay: 400,
+                        });
+                        ScrollReveal().reveal('.registration-main-content', { distance: '-50px', delay: '500' });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Side -->
+    <div class="col s12 m2 l2"> </div>
+
+    <!-- Footer -->
+    <div class="col s12 m12 l12"> </div>
+</div>
+
+<!-- CSS Styling -->
+<style>
+    .plan-card {
+        background: rgba(33, 37, 41, 0.9); /* Grey card background */
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+        width: 250px;
+        padding: 20px;
+        color: #fff;
+        text-align: center;
+        border-top: 5px solid #f39c12;
+        transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        /* Hover Effect */
+        .plan-card:hover {
+            transform: scale(1.05);
+            background: rgba(66, 66, 76, 0.9); /* Brighter grey on hover */
+            box-shadow: 0 0 15px #f39c12; /* Glowing border */
+        }
+
+        .plan-card h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .plan-card p {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .plan-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            .plan-card ul li {
+                margin: 5px 0;
+                font-size: 16px;
+            }
+
+                .plan-card ul li::before {
+                    content: '✔';
+                    margin-right: 8px;
+                    color: #4CAF50; /* Green for checkmarks */
+                }
+
+                
+                .plan-card ul li:nth-child(4)::before {
+                    content: '✘';
+                    color: #e74c3c; /* Red for X marks */
+                }
+    .pinoyfix-banner {
+        position: absolute;
+        top: 20px;
+        left: 60px;
+    }
+
+    .brand-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 60px;
+        font-weight: 900;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        margin: 0;
+    }
+
+        .brand-title span {
+            color: #FFD700; /* Gold Color for 'Fix' */
+        }
+</style>
+<script>
+    function redirectTo(pageUrl) {
+        window.location.href = pageUrl;
+    }
+</script>

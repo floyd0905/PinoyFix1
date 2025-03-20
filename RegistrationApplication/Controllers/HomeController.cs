@@ -34,12 +34,66 @@ namespace RegistrationApplication.Controllers
             return View();
         }
 
+        // Handle registration (POST)
+        [HttpPost]
+        public JsonResult PostData(RegistrationModel registrationInfo)
+        {
+            // Check if the model is valid before processing the registration data
+            if (ModelState.IsValid)
+            {
+                // Add the new user to the in-memory list
+                registeredUsers.Add(registrationInfo);
+
+                // Example of returning a success message (you can replace this with actual data processing)
+                return Json(new { success = true, message = "Registration successful!" }, JsonRequestBehavior.AllowGet);
+            }
+
+            // If the model is not valid, return validation error messages
+            var errorMessages = ModelState.Values.SelectMany(v => v.Errors)
+                                                  .Select(e => e.ErrorMessage)
+                                                  .ToList();
+
+            return Json(new { success = false, errors = errorMessages }, JsonRequestBehavior.AllowGet);
+        }
+
+        private static List<RegistrationModel> registeredUsers = new List<RegistrationModel>();
+        public JsonResult GetRegisteredUsers()
+        {
+            return Json(new { success = true, users = registeredUsers }, JsonRequestBehavior.AllowGet);
+        }
+    
+
         public ActionResult LoginPage()
         {
             return View();
         }
 
         public ActionResult Dashboard()
+        {
+            return View();
+
+        }
+        public ActionResult HomePage()
+        {
+            return View();
+
+        }
+        public ActionResult ProfilePage()
+        {
+            return View();
+
+        }
+        public ActionResult RegistrationPage2()
+        {
+            return View();
+
+        }
+        public ActionResult MOP()
+        {
+            return View();
+
+        }
+        public ActionResult DefaultPage()
         {
             return View();
 

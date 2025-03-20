@@ -1,0 +1,1207 @@
+﻿@{
+    Layout = "~/Views/Shared/_RegistrationApplicationLayout.cshtml";
+}
+<style>
+    .header-container {
+        position: relative;
+        width: 100%;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+    }
+
+    .profile-section {
+        position: relative; /* Ensures the child (button) can be absolutely positioned relative to this container */
+        display: flex;
+        align-items: center;
+        margin-top: 20px;
+        color: white;
+        justify-content: flex-start; /* Keeps the profile name and username aligned to the left */
+        padding: 20px;
+    }
+
+    .profile-pic {
+        width: 500px; /* Fixed size for the profile picture container */
+        height: 500px; /* Fixed size for the profile picture container */
+        border-radius: 50%; /* Circular shape */
+        display: inline-block;
+        margin-right: 50px;
+        margin-bottom: 20px;
+        position: relative; /* Ensures the image is contained within the circle */
+    }
+
+        .profile-pic img {
+            width: 100%; /* Ensures the image fills the fixed size container */
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover; /* Ensures the image covers the area without distortion */
+            cursor: pointer;
+            margin-top: -70px;
+        }
+
+    .profile-name {
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 0;
+        margin-left: -110px;
+    }
+
+
+    .profile-username {
+        font-size: 16px;
+        color: #bbb;
+        margin-left: -110px;
+    }
+
+    #editProfileBtn {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+        border: 2px solid white;
+        border-radius: 5px;
+        padding: 10px 20px;
+        background-color: transparent;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        position: absolute;
+        top: 240px;
+        left: 470px;
+        margin: 0;
+        gap: 8px;
+    }
+
+        #editProfileBtn img.icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        #editProfileBtn:hover {
+            border-color: lightgray;
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        #editProfileBtn:active {
+            transform: translateY(0);
+        }
+
+
+    .tabs-container {
+        display: flex;
+        justify-content: flex-start;
+        gap: 40px;
+        margin-top: -200px;
+        margin-left: 125px;
+        position: relative;
+        padding-bottom: 15px; /* Added padding for the underline */
+    }
+
+    .tab {
+        font-size: 16px;
+        color: white !important;
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+    }
+
+        .tab img {
+            width: 20px;
+            height: 20px;
+            filter: brightness(0) invert(1);
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: white !important;
+            font-weight: 500;
+        }
+
+            .tab.active::after {
+                content: "";
+                position: absolute;
+                bottom: -15px;
+                left: 0;
+                width: 100%;
+                height: 3px;
+                background-color: white;
+                border-radius: 2px;
+                transition: all 0.3s ease;
+            }
+
+    .tabs-container-wrapper {
+        width: 100%;
+        position: relative;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        margin-bottom: 30px;
+    }
+
+    .tab:hover {
+        opacity: 0.8;
+    }
+
+    .tab:not(.active):hover::after {
+        content: "";
+        position: absolute;
+        bottom: -15px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background-color: rgba(255, 255, 255, 0.3);
+        border-radius: 2px;
+    }
+
+    .content-section {
+        display: none;
+        margin-top: 30px;
+        text-align: center;
+    }
+
+        .content-section.active {
+            display: block;
+        }
+
+    .gallery {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+        .gallery img {
+            width: 350px;
+            height: auto;
+            object-fit: cover;
+            border-radius: 10px;
+            opacity: 0;
+            transition: transform 0.3s ease;
+        }
+
+            .gallery img:hover {
+                transform: scale(1.05);
+            }
+
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        margin-top: 100px;
+        max-width: 500px;
+        height: auto;
+        max-height: 100%;
+        overflow: hidden;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.8);
+        
+    }
+
+        .modal.active {
+            display: flex;
+        }
+
+    .modal-content {
+        background: #e8e8e8;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 4px 20px rgba(0, 0, 0, 0.2);
+        text-align: left;
+        position: relative;
+        width: 100%;
+        max-width: 500px;
+        
+    }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+            margin-right: 350px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .modal-content .close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+    /* Add styling for modal image */
+    .modal-image {
+        width: 100%; /* Ensure the image spans the modal's width */
+        max-width: 400px; /* Limit the maximum width */
+        height: 300px; /* Fix the height */
+        object-fit: contain; /* Ensures the image is scaled proportionally within the box */
+        display: block;
+        margin: 0 auto;
+        border: 1px solid #ccc; /* Optional: Add a border for better aesthetics */
+        border-radius: 10px; /* Optional: Round the edges of the image */
+        background: rgba(255, 255, 255, 0.1); /* Optional: Light background behind image */
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+
+        /* Optional: Add a loading spinner while the image loads */
+        .modal-image.loading {
+            background: url('spinner.gif') no-repeat center center;
+            background-size: 50px 50px;
+            height: 300px; /* Set a fixed height while loading */
+        }
+
+    .profile-picture {
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .tabs-container .tab img {
+        filter: brightness(0) invert(1); /* Makes the image white */
+    }
+
+    .tabs-container .tab.active img {
+        filter: none; /* Keeps the active tab's image in its original color */
+    }
+
+    .profile-picture img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 2px solid #ddd;
+        object-fit: cover;
+    }
+
+    .profile-picture .change-photo {
+        display: block;
+        color: #007BFF;
+        cursor: pointer;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+    .input-group {
+        margin-bottom: 15px;
+    }
+
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 14px;
+            display: block;
+        }
+
+
+        .input-group input {
+            width: 100%;
+            border: 2px solid white !important;
+            border-radius: 10px !important;
+            font-size: 14px;
+            background-color: #fff;
+            color: #333;
+            box-sizing: border-box;
+        }
+
+            .input-group input:focus {
+                border-color: #007BFF;
+                outline: none;
+            }
+
+            .input-group input:disabled {
+                background: #f9f9f9;
+            }
+
+            .input-group input::placeholder {
+                color: #888;
+            }
+
+    .first-last-name-group {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+        .first-last-name-group .input-group {
+            width: 48%;
+        }
+
+
+    .password-group {
+        position: relative;
+    }
+
+        .password-group .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+    .modal-content button {
+        background-color: dimgray;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 14px;
+        width: 110px;
+        height: 37px;
+        margin-left: 340px;
+    }
+
+        .modal-content button:hover {
+            background-color: grey;
+        }
+
+
+    #editProfileModal input {
+        color: black !important;
+        background-color: white !important;
+    }
+
+        #editProfileModal input::placeholder {
+            color: black !important;
+        }
+
+    .password-group .toggle-password {
+        position: absolute;
+        right: 30px;
+        width: 10px;
+        top: 60%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        font-size: 20px;
+        color: black;
+    }
+
+    .icon {
+        width: 24px; /* Adjust the size of the icon */
+        height: 24px;
+        margin-right: 8px; /* Space between the icon and the text */
+    }
+
+    /* Add these styles for the masonry gallery layout */
+    .gallery-container {
+        width: 100%;
+        height: calc(100vh - 80px);
+        overflow-y: auto;
+        padding: 20px;
+        margin-top: 0;
+    }
+
+    .gallery {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        max-width: 1800px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .gallery-column {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        min-width: 250px;
+    }
+
+    .gallery-item {
+        width: 100%;
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+            .gallery-item img:hover {
+                transform: scale(1.06);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+                cursor: pointer;
+            }
+</style>
+
+
+<script>
+
+    function openModal() {
+        document.getElementById('editProfileModal').style.display = 'flex';
+
+        const userId = sessionStorage.getItem('userId');
+        if (!userId) {
+            console.error("User ID not found in session storage.");
+            return;
+        }
+
+
+        fetch(`http://localhost:3000/user/profile/${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error(data.error);
+                    return;
+                }
+
+                document.getElementById('firstName').value = data.first_name;
+                document.getElementById('lastName').value = data.last_name;
+                document.getElementById('password').value = data.password;
+                document.getElementById('confirmPassword').value = data.password;
+            })
+            .catch(error => console.error('Error fetching user data:', error));
+    }
+
+
+    function closeModal() {
+        document.getElementById('editProfileModal').style.display = 'none';
+    }
+
+
+    function saveProfile() {
+        const userId = sessionStorage.getItem('userId');
+        const formData = {
+            first_name: document.getElementById('firstName').value,
+            last_name: document.getElementById('lastName').value,
+            password: document.getElementById('password').value,
+            confirm_password: document.getElementById('confirmPassword').value
+        };
+
+
+        fetch(`http://localhost:3000/user/profile/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error updating profile: ' + data.error);
+                } else {
+                    alert('Profile updated successfully!');
+                    closeModal();
+
+                    document.querySelector('.profile-name').textContent = `${formData.first_name} ${formData.last_name}`;
+                    document.querySelector('.profile-username').textContent = formData.first_name.toLowerCase();
+                }
+            })
+            .catch(error => console.error('Error saving profile:', error));
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+
+        const firstName = sessionStorage.getItem('first_name');
+        const lastName = sessionStorage.getItem('last_name');
+
+
+        console.log('Session Storage:', { firstName, lastName });
+
+        if (firstName && lastName) {
+            console.log('User profile:', { firstName, lastName });
+
+
+            document.querySelector('.profile-name').textContent = `${firstName} ${lastName}`;
+            document.querySelector('.profile-username').textContent = firstName.toLowerCase();
+        } else {
+            console.log('No user data found in sessionStorage');
+        }
+
+
+
+
+        const userId = sessionStorage.getItem('userId');
+        if (userId) {
+            fetch(`http://localhost:3000/user/profile/${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error(data.error);
+                        document.querySelector('.profile-name').textContent = "Error fetching profile";
+                    } else {
+
+                        document.querySelector('.profile-name').textContent = `${data.first_name} ${data.last_name}`;
+                        document.querySelector('.profile-username').textContent = `${data.first_name.toLowerCase()}`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching profile:', error);
+                    document.querySelector('.profile-name').textContent = "Failed to load profile.";
+                });
+        } else {
+            console.log('No user logged in');
+
+
+            window.location.href = '/Home/LoginPage';
+        }
+    });
+
+
+    async function fetchImagesForTab(tabType, searchQuery = '') {
+        const userId = sessionStorage.getItem('userId');
+        if (!userId) {
+            console.error("User ID not found in session storage.");
+            return;
+        }
+
+        let apiUrl = tabType === 'posts'
+            ? `http://localhost:3000/user/${userId}/uploaded-images`
+            : `http://localhost:3000/user/${userId}/liked-images`;
+
+        if (searchQuery) {
+            apiUrl += `?tags=${encodeURIComponent(searchQuery)}`;
+        }
+
+        try {
+            console.log('Fetching from URL:', apiUrl);
+            const response = await fetch(apiUrl);
+
+            if (!response.ok) {
+                console.error(`Failed to fetch images. Status: ${response.status}`);
+                return;
+            }
+
+            const data = await response.json();
+            console.log('API Response:', data);
+
+            const images = tabType === 'posts' ? data.images : data;
+            if (!Array.isArray(images)) {
+                console.error("Unexpected response format for images", data);
+                return;
+            }
+
+            renderGallery(tabType, images);
+        } catch (error) {
+            console.error('Error fetching images:', error);
+        }
+    }
+
+    // Render gallery images into the specified tab
+    function renderGallery(tabType, images) {
+        const gallery = document.querySelector(`#${tabType} .gallery`);
+        if (!gallery) {
+            console.error(`Gallery element not found for tab: ${tabType}`);
+            return;
+        }
+
+        gallery.innerHTML = ''; // Clear gallery
+
+        const columns = Array.from({ length: 5 }, () => {
+            const column = document.createElement('div');
+            column.className = 'gallery-column';
+            return column;
+        });
+
+        columns.forEach(column => gallery.appendChild(column));
+
+        images.forEach((image, index) => {
+            const galleryItem = document.createElement('div');
+            galleryItem.className = 'gallery-item';
+
+            const img = createImageElement(image);
+            galleryItem.appendChild(img);
+
+            const columnIndex = index % 5;
+            columns[columnIndex].appendChild(galleryItem);
+        });
+
+        initializeScrollReveal();
+    }
+
+    // Create an image element with all necessary properties and event listeners
+    function createImageElement(image) {
+        const img = document.createElement('img');
+
+        img.src = image.image_url.startsWith('http')
+            ? image.image_url
+            : `http://localhost:3000${image.image_url}`;
+        img.alt = Array.isArray(image.tags) ? image.tags.join(', ') : "Image";
+
+        // Image loading success
+        img.onload = () => {
+            img.style.opacity = '1';
+        };
+
+        // Log image data for debugging
+        console.log("Image Data:", image);
+
+        // Click handler for opening modal
+        img.addEventListener('click', () => {
+            // Directly pass the backend `first_name` to the modal
+            showImageDetailsModal({
+                image_url: img.src,
+                tags: image.tags || [],
+                first_name: image.first_name || "Unknown ..", // Use `first_name` from backend response
+                likes_count: image.likes_count || 0
+            });
+        });
+
+        return img;
+    }
+
+
+
+    function showImageDetailsModal(image) {
+        console.log('Image Object in showImageDetailsModal:', image);
+
+        const modal = document.getElementById('imageDetailsModal');
+        const modalImage = modal.querySelector('.modal-image');
+        const modalUsername = modal.querySelector('#modalUsername'); // Target by ID
+        const likesButton = modal.querySelector('.like-btn');
+        const tagsContainer = modal.querySelector('.tags');
+
+        // Reset modal content
+        modalImage.src = '';
+        modalUsername.textContent = '';
+       
+        tagsContainer.innerHTML = '';
+
+        // Set modal content
+        modalImage.src = image.image_url;
+        modalImage.alt = "Image preview";
+       
+
+        // Use the `first_name` field for username
+        const username = image.first_name;
+        console.log('Resolved Username:', username); // Debugging
+        modalUsername.textContent = username;
+
+        // Handle image load error
+        modalImage.onerror = () => {
+            modalImage.src = '/path/to/fallback-image.jpg';
+            modalImage.alt = 'Failed to load image';
+        };
+
+        // Process and display tags
+        let tags = [];
+        try {
+            tags = Array.isArray(image.tags)
+                ? image.tags
+                : image.tags
+                    ? JSON.parse(image.tags)
+                    : [];
+        } catch (e) {
+            console.error('Error parsing tags:', e);
+        }
+        console.log('Resolved Tags:', tags); // Debugging
+
+        tags.forEach(tag => {
+            const tagElement = document.createElement('span');
+            tagElement.classList.add('tag');
+            tagElement.textContent = tag;
+            tagElement.style.cssText = `
+            background-color: #d3d3d3;
+            padding: 6px 12px;
+            margin: 2px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: black;
+            display: inline-block;
+            text-align: center;
+            font-weight: bold;
+        `;
+            tagsContainer.appendChild(tagElement);
+        });
+
+        // Show the modal with fade-in effect
+        modal.style.display = 'flex';
+        modal.style.opacity = '0';
+        setTimeout(() => {
+            modal.style.opacity = '1';
+        }, 10);
+    }
+
+
+
+
+    // Event listeners for modal closing
+    window.addEventListener('click', (event) => {
+        const modal = document.getElementById('imageDetailsModal');
+        if (event.target === modal) {
+            closeImageDetailsModal();
+        }
+    });
+
+    function closeImageDetailsModal() {
+        const modal = document.getElementById('imageDetailsModal');
+        modal.style.opacity = '0';
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300);
+    }
+
+
+    // Initialize ScrollReveal animations
+    function initializeScrollReveal() {
+        const sr = ScrollReveal({
+            distance: '20px',
+            duration: 600,
+            easing: 'cubic-bezier(0.5, 0, 0, 1)',
+            interval: 100,
+            opacity: 0,
+            origin: 'bottom',
+            scale: 1,
+            cleanup: false,
+            mobile: true,
+            reset: false,
+            useDelay: 'always',
+            viewFactor: 0.1
+        });
+
+        sr.reveal('.gallery-item', {
+            beforeReveal: (el) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+            },
+            afterReveal: (el) => {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            }
+        });
+    }
+
+    // Event listeners for modal closing
+    window.addEventListener('click', (event) => {
+        const modal = document.getElementById('imageDetailsModal');
+        if (event.target === modal) {
+            closeImageDetailsModal();
+        }
+    });
+
+
+
+    // Call the function to load images on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        switchTab('posts'); // Trigger fetch for the default tab
+    });
+
+    // Additional layout adjustment on window resize
+    window.addEventListener('resize', debounce(refreshMasonryLayout, 100));
+
+    // Refresh layout on image load
+    document.addEventListener('load', (e) => {
+        if (e.target.tagName === 'IMG') {
+            refreshMasonryLayout();
+        }
+    }, true);
+
+    // Update tab switching to handle masonry layout
+    function switchTab(tabType) {
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.toggle('active', tab.getAttribute('data-tab') === tabType);
+        });
+
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.classList.toggle('active', section.id === tabType);
+        });
+
+        const searchBar = document.getElementById('searchBar');
+        if (searchBar) {
+            searchBar.value = '';
+        }
+
+        fetchImagesForTab(tabType);
+    }
+
+
+    // Initialize the layout when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        switchTab('posts');
+    });
+
+    function togglePassword(id) {
+        const passwordField = document.getElementById(id);
+        const eyeIcon = document.getElementById(`eye-icon-${id}`);
+
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            // Change to open eye icon
+            eyeIcon.classList.remove('fa-eye-slash');
+            eyeIcon.classList.add('fa-eye');
+        } else {
+            passwordField.type = 'password';
+            // Change to closed eye icon
+            eyeIcon.classList.remove('fa-eye');
+            eyeIcon.classList.add('fa-eye-slash');
+        }
+    }
+
+   
+    document.addEventListener('DOMContentLoaded', async function () {
+        async function loadImages() {
+            try {
+                const userId = sessionStorage.getItem('userId');
+                const response = await fetch(`http://localhost:3000/users/${userId}/images`);
+                const images = await response.json();
+
+                const columns = document.querySelectorAll('.gallery-column');
+
+                images.forEach((image, index) => {
+                    const galleryItem = document.createElement('div');
+                    galleryItem.className = 'gallery-item';
+
+                    const img = document.createElement('img');
+                    img.src = `http://localhost:3000/upload/${image.filename}`;
+                    img.alt = 'Gallery Image';
+                    img.loading = 'lazy';
+
+                    galleryItem.appendChild(img);
+
+                    // Distribute images evenly across columns
+                    const columnIndex = index % 3;
+                    columns[columnIndex].appendChild(galleryItem);
+                });
+
+                // Add ScrollReveal animations
+                const sr = ScrollReveal();
+                columns.forEach((column, index) => {
+                    sr.reveal(column.children, {
+                        origin: 'bottom',
+                        distance: '15px',
+                        duration: 800,
+                        interval: 50,
+                        delay: index * 50,
+                        opacity: 0,
+                        cleanup: false,
+                        beforeReveal: (el) => {
+                            el.style.opacity = '0';
+                            el.style.transform = 'translateY(15px)';
+                            el.style.transition = 'opacity 800ms ease-out, transform 800ms ease-out';
+                        },
+                        afterReveal: (el) => {
+                            el.style.opacity = '1';
+                            el.style.transform = 'translateY(0)';
+                        }
+                    });
+                });
+
+            } catch (error) {
+                console.error('Error loading images:', error);
+            }
+        }
+
+        loadImages();
+    });
+
+</script>
+
+<!-- Header Section -->
+<div class="header-container">
+    <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center;">
+
+        <a href="/Home/HomePage">
+            <img src="~/wwwroot/assets/images/orca.png" alt="Logo" width="115" height="60" style="margin-left: 300px;" />
+        </a>
+
+    </div>
+
+
+
+    <div style="display: flex; align-items: center; margin-right: 50px;">
+        <button onclick="toggleProfile()" style="background-color: transparent; border: none; cursor: pointer;">
+            <!-- Profile image for navigation -->
+            <img id="navProfilePic"
+                 src="~/wwwroot/assets/images/user-avatar.png"
+                 alt="Profile"
+                 style="border-radius: 50%; margin-right: 15px; width: 50px; height: 50px; margin-top: 10px;" />
+        </button>
+        <a href="/Home/LoginPage" style="text-decoration: none; color: white; padding: 4px 15px; border-radius: 50px; background-color: black; border: 2px solid black; height: 37px; padding-right: 25px; padding-left: 25px;">Logout</a>
+    </div>
+</div>
+<!-- Profile Section -->
+
+
+<script>
+
+    async function fetchProfilePicture(imgElement) {
+        const userId = sessionStorage.getItem('userId');
+        if (!userId) {
+            console.error('User ID is not available. Please log in.');
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:3000/user/profile/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                console.error('Failed to fetch profile picture:', response.statusText);
+                return;
+            }
+
+            const data = await response.json();
+            console.log('Response data:', data);
+
+            if (data && data.profile_image) {
+                const profileImageUrl = new URL(data.profile_image, 'http://localhost:3000').toString();
+                imgElement.src = `${profileImageUrl}?timestamp=${Date.now()}`; // Cache-busting
+                console.log('Profile image loaded:', imgElement.src);
+            } else {
+                console.warn('No profile image found. Using default.');
+            }
+        } catch (error) {
+            console.error('Error fetching profile picture:', error.message);
+        }
+    }
+
+    function triggerFileInput() {
+        document.getElementById("fileInput").click();
+    }
+
+    async function uploadProfilePicture() {
+        const fileInput = document.getElementById("fileInput");
+        const profilePic = document.getElementById("profilePic");
+
+        const file = fileInput.files[0];
+        if (!file) {
+            alert('Please select an image file to upload.');
+            return;
+        }
+
+        const userId = sessionStorage.getItem('userId');
+        if (!userId) {
+            console.error('User ID is not available. Please log in.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('profileImage', file);
+
+        try {
+            const response = await fetch(`http://localhost:3000/user/profile/${userId}/upload-image`, {
+                method: 'PUT',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to upload profile picture: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            console.log('Server response:', data);
+
+            if (data && data.profileImageUrl) {
+                const newImageUrl = new URL(data.profileImageUrl, 'http://localhost:3000').toString();
+                profilePic.src = `${newImageUrl}?timestamp=${Date.now()}`; // Cache-busting
+                console.log('Profile image updated:', profilePic.src);
+
+                sessionStorage.setItem('profileImageUrl', newImageUrl);
+                alert('Profile picture uploaded successfully!');
+            } else {
+                throw new Error('No image URL returned from server.');
+            }
+        } catch (error) {
+            console.error('Error uploading profile picture:', error.message);
+            alert('Failed to upload profile picture. Please try again.');
+        }
+    }
+
+    // Fetch the profile picture for the profile page and navigation on page load
+    window.onload = function () {
+        const profilePic = document.getElementById("profilePic");
+        if (profilePic) fetchProfilePicture(profilePic);
+
+        const navProfilePic = document.getElementById("navProfilePic");
+        if (navProfilePic) fetchProfilePicture(navProfilePic);
+    };
+
+</script>
+
+
+
+<div class="profile-section">
+    <div class="profile-pic" style="position: relative;">
+        <!-- Profile Image -->
+        <img id="profilePic"
+             src="/wwwroot/assets/images/user-avatar.png"
+             alt="Profile Picture"
+             onclick="triggerFileInput()"
+             style="cursor: pointer; width: 300px; height: 300px; margin-left: 110px; margin-top: 10px;" />
+
+        <!-- Hidden file input -->
+        <input type="file"
+               id="fileInput"
+               style="display: none;"
+               accept="image/*"
+               onchange="uploadProfilePicture()" />
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="profile-info">
+        <div class="profile-name" style="margin-top: -120px;">FName LName</div>
+        <div class="profile-username">Username</div>
+        <!-- Edit Profile link -->
+    </div>
+
+    <button id="editProfileBtn" onclick="openModal()">
+        <img src="~/wwwroot/assets/images/Edit-profile.png" class="icon" />
+        Edit Profile
+    </button>
+</div>
+<!-- Edit Profile Modal -->
+<div id="editProfileModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Edit Profile</h2>
+
+        <!-- Profile Picture -->
+        <div class="profile-picture">
+            <img src="/wwwroot/assets/images/user-avatar.png" alt="Profile" id="profileImage">
+
+            <input type="file" id="profileImageUpload" style="display: none;" />
+        </div>
+
+        <form id="editProfileForm">
+            <div class="first-last-name-group">
+                <div class="input-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" placeholder="Enter First Name" />
+                </div>
+                <div class="input-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" placeholder="Enter Last Name" />
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="[Insert username]" disabled />
+            </div>
+            <div class="input-group password-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter Password" />
+                <span class="toggle-password" onclick="togglePassword('password')">
+                    <!-- Default to closed eye icon (Font Awesome) -->
+                    <i class="fas fa-eye-slash" id="eye-icon-password"></i>
+                </span>
+            </div>
+
+            <div class="input-group password-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" />
+                <span class="toggle-password" onclick="togglePassword('confirmPassword')">
+                    <!-- Default to closed eye icon (Font Awesome) -->
+                    <i class="fas fa-eye-slash" id="eye-icon-confirmPassword"></i>
+                </span>
+            </div>
+
+
+            <button type="button" onclick="saveProfile()">Save</button>
+        </form>
+    </div>
+</div>
+
+
+<div class="tabs-container-wrapper">
+    <div class="tabs-container">
+        <button class="tab active" data-tab="posts" onclick="switchTab('posts')">
+            <img src="~/wwwroot/assets/images/Posts Icon.png" alt="Posts Icon" class="icon"> Posts
+        </button>
+        <button class="tab" data-tab="likes" onclick="switchTab('likes')">
+            <img src="~/wwwroot/assets/images/Like Icon.png" alt="Likes Icon" class="icon"> Likes
+        </button>
+
+    </div>
+</div>
+
+<!-- Tab Content -->
+<div id="posts" class="content-section active">
+    <div class="gallery">
+        Posts Content
+    </div>
+</div>
+<div id="likes" class="content-section">
+    <div class="gallery">
+        Likes Content
+    </div>
+</div>
+<!-- Include this in your HTML -->
+<div id="imageDetailsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span id="modalUsername" class="user-name"></span>
+            <button type="button" data-download="modalImagePreview" style="background: none; color: black; border: none; cursor: pointer; position: absolute; top: 16px; right: 100px; display: flex; align-items: center; justify-content: center;">
+                <span style="white-space: nowrap;">Download Image</span>
+            </button>
+            <button onclick="closeImageDetailsModal()" style="background: none; border: none; cursor: pointer; position: absolute; top: 10px; right: 10px;">
+                <img src="~/wwwroot/assets/images/Delete.png" alt="Close Logo" style="width: 30px; height: 30px;" />
+            </button>
+        </div>
+        <img id="modalImagePreview" class="modal-image" src="" alt="Image Preview" />
+        <strong>Tags:</strong>
+        <div id="modalTags" class="tags"></div> 
+        <button class="like-btn" style="background: none; color: black; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <img src="~/wwwroot/assets/images/Like Clicked.png" alt="Like" style="width: 20px; height: 20px; margin-right: 770px;">
+            
+        </button>
+    </div>
+</div>
+<script>
+    document.querySelectorAll("[data-download]").forEach(button => {
+        button.addEventListener("click", (event) => {
+            event.preventDefault();
+            const imageId = button.getAttribute("data-download");
+            const image = document.getElementById(imageId);
+
+            if (image) {
+                const a = document.createElement("a");
+                a.href = image.src;
+                a.download = image.src.split('/').pop();
+                a.target = "_self";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+        });
+    });
+    </script>
+
+
+<!-- Replace the existing gallery HTML with this structure -->
+<div class="content-section" id="photos">
+    <div class="gallery-container">
+        <div class="gallery">
+            <div class="gallery-column"></div>
+            <div class="gallery-column"></div>
+            <div class="gallery-column"></div>
+        </div>
+    </div>
+</div>

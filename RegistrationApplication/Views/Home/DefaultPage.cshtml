@@ -1,0 +1,380 @@
+﻿@{
+    Layout = "~/Views/Shared/_RegistrationApplicationLayout.cshtml";
+}
+
+<div class="row center" ng-app="myApp" ng-controller="myController" style="position: relative;">
+    <div class="col s12 m12 l12" style="margin-bottom: 200px;">
+        <div class="pinoyfix-banner">
+            <h1 class="brand-title">Pinoy<span>Fix</span></h1>
+        </div>
+    </div>
+
+    <!-- Left Side -->
+    <div class="col s12 m2 l2"></div>
+
+    <!-- Middle Content -->
+    <div class="registration-main-content col s12 m8 l8">
+
+        <!-- Tab Navigation -->
+        <div class="tab-container">
+            <div class="tab-btn" ng-click="currentTab = 'main'" ng-class="{'active-tab': currentTab === 'main'}">
+                All Services You Need
+            </div>
+            <div class="tab-btn" ng-click="currentTab = 'services'" ng-class="{'active-tab': currentTab === 'services'}">
+                Services
+            </div>
+            <div class="tab-btn" ng-click="currentTab = 'gallery'" ng-class="{'active-tab': currentTab === 'gallery'}">
+                Most Viewed
+            </div>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+
+            <!-- All Services You Need (Tab 1) -->
+            <div class="tab-panel" ng-show="currentTab === 'main'">
+                <div class="card-content dark-grey-bg">
+                    <h2>All the services you need! <br> all in one place</h2>
+                    <p>Starts at &#8369;50</p>
+                    <div class="button-group">
+                        <a href="/Home/LoginPage" class="btn" style="color: black;">Login</a>
+                        <a href="/Home/RegistrationPage" class="btn" style="color: black;">Register now &gt;</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Services Section (Tab 2) -->
+            <div class="tab-panel" ng-show="currentTab === 'services'">
+                <div class="services-section">
+                    <h3>Our Services</h3>
+                    <div class="services-grid">
+                        <div>Computer Repair</div>
+                        <div>Logo Making</div>
+                        <div>Gardening</div>
+                        <div>Plumber</div>
+                        <div>Laundry</div>
+                        <div>Car Repair</div>
+                        <div>House Paint</div>
+                        <div>Car Paint</div>
+                        <div>Carpentry</div>
+                        <div>Welding</div>
+                        <div>Tailoring</div>
+                        <div>Electrician</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gallery Section (Tab 3) -->
+            <div class="tab-panel" ng-if="currentTab === 'gallery'">
+                <div class="gallery-section">
+                    <h3>Most Viewed Services</h3>
+                    <div class="gallery-slider">
+                        <button class="slider-btn left">&lt;</button>
+                        <div class="gallery-track">
+                            <div class="gallery-item">
+                                <img src="~/wwwroot/assets/images/Academic.jpg" alt="1">
+                                <span class="rank">1</span>
+                                <span class="recently-added">Most Viewed</span>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="~/wwwroot/assets/images/Appliance.jpg" alt="2">
+                                <span class="rank">2</span>
+                                <span class="recently-added">Most Viewed</span>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="~/wwwroot/assets/images/Cars.jpg" alt="3">
+                                <span class="rank">3</span>
+                                <span class="recently-added">Most Viewed</span>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="~/wwwroot/assets/images/Computer.png" alt="4">
+                                <span class="rank">4</span>
+                                <span class="recently-added">Most Viewed</span>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="img2.jpg" alt="5">
+                                <span class="rank">5</span>
+                                <span class="recently-added">Most Viewed</span>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="img2.jpg" alt="6">
+                                <span class="rank">6</span>
+                                <span class="recently-added">Most Viewed</span>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="img2.jpg" alt="7">
+                                <span class="rank">7</span>
+                                <span class="recently-added">Most Viewed</span>
+                            </div>
+
+                            <!-- Add more items here -->
+                        </div>
+                        <button class="slider-btn right">&gt;</button>
+                    </div>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const track = document.querySelector('.gallery-track');
+                            const prevBtn = document.querySelector('.slider-btn.left');
+                            const nextBtn = document.querySelector('.slider-btn.right');
+
+                            if (!track || !prevBtn || !nextBtn) {
+                                console.error("Slider elements not found. Check your HTML structure.");
+                                return;
+                            }
+
+                            let position = 0;
+                            const itemWidth = document.querySelector('.gallery-item').offsetWidth + 20; // Width + gap
+
+                            // Move Right
+                            nextBtn.addEventListener('click', () => {
+                                const maxScroll = track.scrollWidth - track.clientWidth;
+                                if (position < maxScroll) {
+                                    position += itemWidth;
+                                    track.style.transform = `translateX(-${position}px)`;
+                                }
+                            });
+
+                            // Move Left
+                            prevBtn.addEventListener('click', () => {
+                                if (position > 0) {
+                                    position -= itemWidth;
+                                    track.style.transform = `translateX(-${position}px)`;
+                                }
+                            });
+                        });
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Right Side -->
+<div class="col s12 m2 l2"></div>
+
+<!-- Footer -->
+<div class="col s12 m12 l12"></div>
+</div>
+
+<!-- AngularJS Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const track = document.querySelector('.gallery-track');
+        const prevBtn = document.querySelector('.slider-btn.left');
+        const nextBtn = document.querySelector('.slider-btn.right');
+
+        if (!track || !prevBtn || !nextBtn) {
+            console.error("Slider elements not found. Check your HTML structure.");
+            return;
+        }
+
+        let position = 0;
+        const itemWidth = document.querySelector('.gallery-item').offsetWidth + 20; // Item width + gap
+        const totalItems = document.querySelectorAll('.gallery-item').length;
+        const visibleItems = Math.floor(track.clientWidth / itemWidth);
+
+        const maxScroll = (totalItems - visibleItems) * itemWidth;
+
+        // Move Right
+        nextBtn.addEventListener('click', () => {
+            if (position < maxScroll) {
+                position += itemWidth;
+                track.style.transform = `translateX(-${position}px)`;
+            }
+        });
+
+        // Move Left
+        prevBtn.addEventListener('click', () => {
+            if (position > 0) {
+                position -= itemWidth;
+                track.style.transform = `translateX(-${position}px)`;
+            }
+        });
+    });
+</script>
+
+
+<!-- CSS Styling -->
+<style>
+
+    body {
+        background-color: #282c34;
+        color: #fff;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .pinoyfix-banner {
+        position: absolute;
+        top: 20px;
+        left: 50px;
+    }
+
+    .brand-title {
+        color: #fff;
+        font-size: 60px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+        .brand-title span {
+            color: #FFD700;
+        }
+
+    /* TAB DESIGN */
+    .tab-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+        background: #3a3a3a;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+    }
+
+    .tab-btn {
+        flex: 1;
+        text-align: center;
+        padding: 15px 30px;
+        background: #404040;
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.3s;
+    }
+
+    .active-tab {
+        background-color: #FFD700;
+        color: #000;
+        font-weight: bold;
+        transform: scale(1.1);
+    }
+
+    .tab-content {
+        background-color: #3a3a3a;
+        border-radius: 15px;
+        margin-top: 20px;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+    }
+
+    .tab-panel {
+        animation: slideIn 0.5s ease-in-out;
+    }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    .services-section, .gallery-section {
+        text-align: center;
+    }
+
+    .services-grid, .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+        .services-grid div, .gallery-item {
+            background: #fff;
+            color: #000;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+            .services-grid div:hover, .gallery-item:hover {
+                background: #FFD700;
+                transform: scale(1.05);
+            }
+
+    .gallery-slider {
+        position: relative;
+        overflow: hidden; /* Ensures content doesn't overflow */
+        width: 100%;
+        max-width: 1000px; /* Adjust as desired */
+        margin: auto;
+    }
+
+    .gallery-track {
+        display: flex; /* Key fix for horizontal scrolling */
+        flex-wrap: nowrap;
+        gap: 20px;
+        transition: transform 0.5s ease;
+        will-change: transform;
+    }
+
+    .gallery-item {
+        min-width: 200px; /* Consistent width */
+        height: 300px; /* Consistent height */
+    }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-bottom: 3px solid #FFD700;
+        }
+
+    /* Rank and Recently Added Tag */
+    .rank {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        font-size: 120px;
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.1);
+        z-index: 0;
+    }
+
+    .recently-added {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        background: #e50914;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: bold;
+        z-index: 1;
+    }
+
+    /* Slider Navigation Buttons */
+    .slider-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 24px;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+        .slider-btn.left {
+            left: 0;
+        }
+
+        .slider-btn.right {
+            right: 0;
+        }
+
+        .slider-btn:hover {
+            background: #e50914;
+        }
+</style>
