@@ -8,6 +8,11 @@ const fs = require('fs');
 
 const app = express();
 
+
+const PORT = process.env.PORT || 3000;  // Use Render's assigned port
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
 app.use(express.json());
 
 app.use(bodyParser.json());
@@ -597,7 +602,4 @@ app.use('/upload/profile', express.static(path.join(__dirname, 'upload/profile')
 app.use('/upload', express.static(path.join(__dirname, 'upload')));
 
 
-app.listen(3000, () => {
-    console.log('Server running on http://localhost:3000');
-});
 

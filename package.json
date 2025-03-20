@@ -1,19 +1,26 @@
 {
-  "dependencies": {
-    "body-parser": "^1.20.3",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "multer": "^1.4.5-lts.2",
-    "mysql2": "^3.14.0"
-  },
-  "name": "registrationapplication",
+  "name": "holy-scripts",
   "version": "1.0.0",
-  "description": "��#\u0000 \u0000p\u0000l\u0000o\u0000i\u0000d\u0000\r\u0000 \u0000",
-  "main": "index.js",
+  "description": "",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.14.0",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^9.16.0"
+  },
+  "engines": {
+    "node": "22.x",
+    "npm": "10.x"
+  },
+
   "keywords": [],
   "author": "",
   "license": "ISC"
