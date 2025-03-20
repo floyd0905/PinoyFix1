@@ -241,6 +241,7 @@
     <Content Include="wwwroot\assets\images\mount fuji edited.png" />
     <Content Include="wwwroot\assets\images\mount fuji.png" />
     <Content Include="Scripts\Holy-Scripts\login.php" />
+    <Content Include="Scripts\Holy-Scripts\.env" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\Holy-Scripts\Controller.js" />
     <Content Include="Scripts\Holy-Scripts\Module.js" />

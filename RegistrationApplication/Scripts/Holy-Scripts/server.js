@@ -30,11 +30,10 @@ app.use(cors({
 
 
 const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT || 3306, // Default MySQL port
+    host: '127.0.0.1',
+    user: 'root',
+    password: '1234',
+    database: 'registration_db',
 });
 
 db.connect((err) => {
