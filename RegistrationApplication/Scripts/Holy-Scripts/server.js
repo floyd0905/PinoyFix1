@@ -8,19 +8,9 @@ const fs = require('fs');
 
 const app = express();
 
-
-const PORT = process.env.PORT || 3000;  // Use Render's assigned port
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
 app.use(express.json());
 
 app.use(bodyParser.json());
-
-const uploadDir = path.join(__dirname, 'upload/profile');
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
 
 
 if (!fs.existsSync('upload')) {
@@ -35,10 +25,10 @@ app.use(cors({
 
 
 const db = mysql.createConnection({
-    host: process.env.DB_HOST || '127.0.0.1',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASS || '1234',
-    database: process.env.DB_NAME || 'registration_db',
+    host: '127.0.0.1',
+    user: 'root',
+    password: '1234',
+    database: 'registration_db',
 });
 
 db.connect((err) => {
@@ -204,8 +194,8 @@ app.get('/search-images', (req, res) => {
 app.get('/user/profile/:userId', (req, res) => {
     const userId = req.params.userId;
 
-    // Query to fetch user data, including password
-    const query = `SELECT first_name, last_name, password, profile_image FROM users WHERE id = ?`;
+
+    const query = `SELECT first_name, last_name, password FROM users WHERE id = ?`;
 
     db.query(query, [userId], (err, result) => {
         if (err) {
@@ -217,22 +207,13 @@ app.get('/user/profile/:userId', (req, res) => {
         }
 
         const user = result[0];
-
-        // Construct the full URL for the profile image
-        const profileImageUrl = user.profile_image ? `http://localhost:3000${user.profile_image}` : null;
-
-        // Return the profile data, including the password (only for editing purposes)
         res.json({
             first_name: user.first_name,
             last_name: user.last_name,
-            password: user.password,  // Add the password here
-            profile_image: profileImageUrl,
+            password: user.password
         });
     });
 });
-
-
-
 
 
 app.put('/user/profile/:userId', (req, res) => {
@@ -290,14 +271,11 @@ app.get('/user/:userId/liked-images', (req, res) => {
     console.log(`Fetching liked images for user ID: ${userId}`);
 
     const query = `
-    SELECT images.id, images.image_url, images.tags, 
-           COUNT(likes.id) AS likes_count,
-           users.first_name
+    SELECT images.id, images.image_url, images.tags, COUNT(likes.id) AS likes_count
     FROM images
     LEFT JOIN likes ON images.id = likes.image_id
-    LEFT JOIN users ON likes.user_id = users.id
     WHERE likes.user_id = ?
-    GROUP BY images.id, users.first_name
+    GROUP BY images.id
     `;
 
     db.query(query, [userId], (err, results) => {
@@ -321,7 +299,6 @@ app.get('/user/:userId/liked-images', (req, res) => {
 });
 
 
-
 app.get('/user/:id/uploaded-images', (req, res) => {
     const userId = req.params.id;
 
@@ -329,31 +306,15 @@ app.get('/user/:id/uploaded-images', (req, res) => {
         return res.status(400).json({ error: 'User ID is required.' });
     }
 
-    // Modify the query to join with the `users` table to get `first_name`
-    const query = `
-        SELECT 
-            images.image_url, 
-            images.tags, 
-            users.first_name
-        FROM 
-            images
-        JOIN 
-            users ON images.user_id = users.id
-        WHERE 
-            images.user_id = ?
-    `;
-
+    const query = `SELECT image_url, tags FROM images WHERE user_id = ?`;
     db.query(query, [userId], (err, results) => {
         if (err) {
             console.error('Database error fetching uploaded images:', err);
             return res.status(500).json({ error: 'Failed to fetch uploaded images.' });
         }
-
-        // Return the results with the first_name
         res.status(200).json({ images: results });
     });
 });
-
 
 app.post('/images/:imageId/like', (req, res) => {
     const { userId } = req.body;
@@ -548,58 +509,11 @@ app.post('/images/:imageId/favorite', (req, res) => {
     });
 });
 
-const profileStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'upload/profile/'); // Path where the profile images will be stored
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname)); // Generate a unique file name
-    },
-});
-const profileUpload = multer({ storage: profileStorage });
-
-// Create the profile image upload directory if it doesn't exist
-if (!fs.existsSync('upload/profile')) {
-    fs.mkdirSync('upload/profile', { recursive: true });
-}
-
-// PUT: Update user profile image
-app.put('/user/profile/:userId/upload-image', profileUpload.single('profileImage'), (req, res) => {
-    const { userId } = req.params;
-
-    // Ensure a file is uploaded
-    if (!req.file) {
-        return res.status(400).json({ error: 'Profile image is required.' });
-    }
-
-    // Construct the URL of the uploaded profile image
-    const profileImageUrl = `/upload/profile/${req.file.filename}`;
-
-    // Update the user's profile image in the database
-    const query = `UPDATE users SET profile_image = ? WHERE id = ?`;
-    db.query(query, [profileImageUrl, userId], (err, result) => {
-        if (err) {
-            console.error('Error updating profile image:', err);
-            return res.status(500).json({ error: 'Failed to update profile image. Please t`ry again later.' });
-        }
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ error: 'User not found.' });
-        }
-
-        // Send the URL of the uploaded profile image back to the client
-        res.status(200).json({
-            message: 'Profile image updated successfully.',
-            profileImageUrl: profileImageUrl,  // Return the profile image URL
-        });
-    });
-});
-
-
-// Serve profile images from the upload folder
-app.use('/upload/profile', express.static(path.join(__dirname, 'upload/profile')));
 
 app.use('/upload', express.static(path.join(__dirname, 'upload')));
 
 
+app.listen(3000, () => {
+    console.log('Server running on http://localhost:3000');
+});
 
